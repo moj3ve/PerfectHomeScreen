@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>PHSRootHeaderView</string>
+			<key>icon</key>
+			<string>PHSHeader.png</string>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>App Icons</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>hideAppLabels</string>
+			<key>label</key>
+			<string>Hide Icon Label</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>hideBlueDot</string>
+			<key>label</key>
+			<string>Hide 'Updated App' Blue Dot</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>progressBarWhenDownloading</string>
+			<key>label</key>
+			<string>Show Progress Bar While Downloading</string>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Hide App Icons</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>hideAppIcons</string>
+			<key>label</key>
+			<string>Enabled</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Select Apps To Hide</string>
+			<key>action</key>
+			<string>selectAppsToHide</string>
+   	 	</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Folders</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>autoCloseFolders</string>
+			<key>label</key>
+			<string>Close Folder After Opening An App</string>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Shortcuts</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>hideShareAppShortcut</string>
+			<key>label</key>
+			<string>Hide 'Share App' From App Shortcuts</string>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Custom Home Screen Layout</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customHomeScreenLayoutEnabled</string>
+			<key>label</key>
+			<string>Enabled</string>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customHomeScreenRowsEnabled</string>
+			<key>label</key>
+			<string>Custom Home Screen Rows</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBStepperTableCell</string>
+			<key>default</key>
+			<real>6</real>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customHomeScreenRows</string>
+			<key>label</key>
+			<string>%i Rows</string>
+			<key>singularLabel</key>
+			<string>1 Row</string>
+			<key>max</key>
+			<real>9</real>
+			<key>min</key>
+			<real>3</real>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customHomeScreenColumnsEnabled</string>
+			<key>label</key>
+			<string>Custom Home Screen Columns</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBStepperTableCell</string>
+			<key>default</key>
+			<real>4</real>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customHomeScreenColumns</string>
+			<key>label</key>
+			<string>%i Columns</string>
+			<key>singularLabel</key>
+			<string>1 Column</string>
+			<key>max</key>
+			<real>6</real>
+			<key>min</key>
+			<real>3</real>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customFolderRowsEnabled</string>
+			<key>label</key>
+			<string>Custom Folder Rows</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBStepperTableCell</string>
+			<key>default</key>
+			<real>3</real>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customFolderRows</string>
+			<key>label</key>
+			<string>%i Rows</string>
+			<key>singularLabel</key>
+			<string>1 Row</string>
+			<key>max</key>
+			<real>5</real>
+			<key>min</key>
+			<real>2</real>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customFolderColumnsEnabled</string>
+			<key>label</key>
+			<string>Custom Folder Columns</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBStepperTableCell</string>
+			<key>default</key>
+			<real>3</real>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customFolderColumns</string>
+			<key>label</key>
+			<string>%i Columns</string>
+			<key>singularLabel</key>
+			<string>1 Column</string>
+			<key>max</key>
+			<real>5</real>
+			<key>min</key>
+			<real>2</real>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customDockColumnsEnabled</string>
+			<key>label</key>
+			<string>Custom Dock Icons (iPhone)</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBStepperTableCell</string>
+			<key>default</key>
+			<real>4</real>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>customDockColumns</string>
+			<key>label</key>
+			<string>%i Icons</string>
+			<key>singularLabel</key>
+			<string>1 Icon</string>
+			<key>max</key>
+			<real>6</real>
+			<key>min</key>
+			<real>4</real>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>ABOUT THIS TWEAK</string>
+        </dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Source Code</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>url</key>
+   	 		<string>https://github.com/johnzaro/PerfectHomeScreen13</string>
+		</dict>
+ 		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>ABOUT ME</string>
+        </dict>
+		<dict>
+			<key>big</key>
+    		<true/>
+            <key>cellClass</key>
+            <string>HBTwitterCell</string>
+			<key>height</key>
+    		<integer>56</integer>
+            <key>label</key>
+            <string>John Zarogiannis</string>
+            <key>user</key>
+            <string>johnzaro</string>
+        </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSButtonCell</string>
+            <key>label</key>
+            <string>Email Me</string>
+            <key>action</key>
+            <string>email</string>
+            <key>icon</key>
+            <string>email.png</string>
+        </dict>
+		<dict>
+            <key>cell</key>
+            <string>PSButtonCell</string>
+            <key>label</key>
+            <string>Check me on Reddit</string>
+            <key>action</key>
+            <string>reddit</string>
+            <key>icon</key>
+            <string>reddit.png</string>
+        </dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Like my work? Buy me a coffee :)</string>
+			<key>icon</key>
+			<string>donate.png</string>
+			<key>url</key>
+   	 		<string>https://paypal.me/JohnZarogiannis</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>© 2020 John Zarogiannis (johnzaro)</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>PerfectHomeScreen13</string>
+</dict>
+</plist>
