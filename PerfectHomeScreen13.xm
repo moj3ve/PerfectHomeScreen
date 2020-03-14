@@ -99,14 +99,14 @@
 
 	- (id)insertIcon: (SBApplicationIcon*)icon atIndex: (unsigned long long*)arg2 options: (unsigned long long)arg3
 	{
-		if([SparkAppList doesIdentifier: @"com.johnzaro.perfecthomescreen13prefs" andKey: @"hiddenApps" containBundleIdentifier: [icon applicationBundleID]])
+		if([SparkAppList doesIdentifier: @"com.johnzaro.perfecthomescreen13prefs.hiddenApps" andKey: @"hiddenApps" containBundleIdentifier: [icon applicationBundleID]])
 			return nil;
 		else return %orig;
 	}
 
 	- (BOOL)addIcon: (SBApplicationIcon*)icon asDirty: (BOOL)arg2
 	{
-		if([SparkAppList doesIdentifier: @"com.johnzaro.perfecthomescreen13prefs" andKey: @"hiddenApps" containBundleIdentifier: [icon applicationBundleID]]) 
+		if([SparkAppList doesIdentifier: @"com.johnzaro.perfecthomescreen13prefs.hiddenApps" andKey: @"hiddenApps" containBundleIdentifier: [icon applicationBundleID]]) 
 			return nil;
 		else return %orig;
 	}
@@ -281,12 +281,12 @@
 	{
 		pref = [[HBPreferences alloc] initWithIdentifier: @"com.johnzaro.perfecthomescreen13prefs"];
 
-		[pref registerBool: &hideAppLabels default: NO forKey: @"hideAppLabels"];
-		[pref registerBool: &hideBlueDot default: NO forKey: @"hideBlueDot"];
-		[pref registerBool: &progressBarWhenDownloading default: NO forKey: @"progressBarWhenDownloading"];
-		[pref registerBool: &hideAppIcons default: NO forKey: @"hideAppIcons"];
-		[pref registerBool: &autoCloseFolders default: NO forKey: @"autoCloseFolders"];
-		[pref registerBool: &hideShareAppShortcut default: NO forKey: @"hideShareAppShortcut"];
+		hideAppLabels = [pref boolForKey: @"hideAppLabels"];
+		hideBlueDot = [pref boolForKey: @"hideBlueDot"];
+		progressBarWhenDownloading = [pref boolForKey: @"progressBarWhenDownloading"];
+		hideAppIcons = [pref boolForKey: @"hideAppIcons"];
+		autoCloseFolders = [pref boolForKey: @"autoCloseFolders"];
+		hideShareAppShortcut = [pref boolForKey: @"hideShareAppShortcut"];
 
 		if(hideAppLabels) %init(hideAppLabelsGroup);
 		if(hideBlueDot) %init(hideBlueDotGroup);
@@ -295,20 +295,20 @@
 		if(autoCloseFolders) %init(autoCloseFoldersGroup);
 		if(hideShareAppShortcut) %init(hideShareAppShortcutGroup);
 
-		[pref registerBool: &customHomeScreenLayoutEnabled default: NO forKey: @"customHomeScreenLayoutEnabled"];
+		customHomeScreenLayoutEnabled = [pref boolForKey: @"customHomeScreenLayoutEnabled"];
 		if(customHomeScreenLayoutEnabled)
 		{
-			[pref registerBool: &customHomeScreenRowsEnabled default: NO forKey: @"customHomeScreenRowsEnabled"];
-			[pref registerBool: &customHomeScreenColumnsEnabled default: NO forKey: @"customHomeScreenColumnsEnabled"];
-			[pref registerBool: &customFolderRowsEnabled default: NO forKey: @"customFolderRowsEnabled"];
-			[pref registerBool: &customFolderColumnsEnabled default: NO forKey: @"customFolderColumnsEnabled"];
-			[pref registerBool: &customDockColumnsEnabled default: NO forKey: @"customDockColumnsEnabled"];
+			customHomeScreenRowsEnabled = [pref boolForKey: @"customHomeScreenRowsEnabled"];
+			customHomeScreenColumnsEnabled = [pref boolForKey: @"customHomeScreenColumnsEnabled"];
+			customFolderRowsEnabled = [pref boolForKey: @"customFolderRowsEnabled"];
+			customFolderColumnsEnabled = [pref boolForKey: @"customFolderColumnsEnabled"];
+			customDockColumnsEnabled = [pref boolForKey: @"customDockColumnsEnabled"];
 
-			[pref registerUnsignedInteger: &customHomeScreenRows default: 6 forKey: @"customHomeScreenRows"];
-			[pref registerUnsignedInteger: &customHomeScreenColumns default: 4 forKey: @"customHomeScreenColumns"];
-			[pref registerUnsignedInteger: &customFolderRows default: 3 forKey: @"customFolderRows"];
-			[pref registerUnsignedInteger: &customFolderColumns default: 3 forKey: @"customFolderColumns"];
-			[pref registerUnsignedInteger: &customDockColumns default: 4 forKey: @"customDockColumns"];
+			customHomeScreenRows = [pref unsignedIntegerForKey: @"customHomeScreenRows"];
+			customHomeScreenColumns = [pref unsignedIntegerForKey: @"customHomeScreenColumns"];
+			customFolderRows = [pref unsignedIntegerForKey: @"customFolderRows"];
+			customFolderColumns = [pref unsignedIntegerForKey: @"customFolderColumns"];
+			customDockColumns = [pref unsignedIntegerForKey: @"customDockColumns"];
 
 			%init(customHomeScreenLayoutGroup);
 		}

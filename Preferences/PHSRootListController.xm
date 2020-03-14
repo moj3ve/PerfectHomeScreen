@@ -1,4 +1,5 @@
 #include "PHSRootListController.h"
+#import "SparkAppListTableViewController.h"
 #import "spawn.h"
 
 @implementation PHSRootListController
@@ -75,10 +76,21 @@
 
 - (void)selectAppsToHide
 {
-    SparkAppListTableViewController *s = [[SparkAppListTableViewController alloc] initWithIdentifier: @"com.johnzaro.perfecthomescreen13prefs" andKey: @"hiddenApps"];
+    SparkAppListTableViewController *s = [[SparkAppListTableViewController alloc] initWithIdentifier: @"com.johnzaro.perfecthomescreen13prefs.hiddenApps" andKey: @"hiddenApps"];
 
     [self.navigationController pushViewController: s animated: YES];
     self.navigationItem.hidesBackButton = FALSE;
+}
+
+- (void)reset: (PSSpecifier*)specifier
+{
+    [[[HBPreferences alloc] initWithIdentifier: @"com.johnzaro.perfecthomescreen13prefs"] removeAllObjects];
+
+    NSFileManager *manager = [NSFileManager defaultManager];
+    [manager removeItemAtPath:@"/var/mobile/Library/Preferences/com.johnzaro.perfecthomescreen13prefs.plist" error: nil];
+    [manager removeItemAtPath:@"/var/mobile/Library/Preferences/com.johnzaro.perfecthomescreen13prefs.hiddenApps.plist" error: nil];
+
+    [self respring];
 }
 
 - (void)respring
