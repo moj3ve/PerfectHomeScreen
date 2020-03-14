@@ -280,6 +280,26 @@
 	@autoreleasepool
 	{
 		pref = [[HBPreferences alloc] initWithIdentifier: @"com.johnzaro.perfecthomescreen13prefs"];
+		[pref registerDefaults:
+		@{
+			@"hideAppLabels": @NO,
+			@"hideBlueDot": @NO,
+			@"progressBarWhenDownloading": @NO,
+			@"hideAppIcons": @NO,
+			@"autoCloseFolders": @NO,
+			@"hideShareAppShortcut": @NO,
+			@"customHomeScreenLayoutEnabled": @NO,
+			@"customHomeScreenRowsEnabled": @NO,
+			@"customHomeScreenColumnsEnabled": @NO,
+			@"customFolderRowsEnabled": @NO,
+			@"customFolderColumnsEnabled": @NO,
+			@"customDockColumnsEnabled": @NO,
+			@"customHomeScreenRows": @6,
+			@"customHomeScreenColumns": @4,
+			@"customFolderRows": @3,
+			@"customFolderColumns": @3,
+			@"customDockColumns": @4
+    	}];
 
 		hideAppLabels = [pref boolForKey: @"hideAppLabels"];
 		hideBlueDot = [pref boolForKey: @"hideBlueDot"];
