@@ -1,6 +1,28 @@
 #import "PerfectHomeScreen13.h"
 
+#import <Cephei/HBPreferences.h>
+#import "SparkAppList.h"
+
 #define IS_iPAD ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+
+static HBPreferences *pref;
+static BOOL progressBarWhenDownloading;
+static BOOL autoCloseFolders;
+static BOOL hideAppIcons;
+static BOOL hideAppLabels;
+static BOOL hideBlueDot;
+static BOOL hideShareAppShortcut;
+static BOOL customHomeScreenLayoutEnabled;
+static BOOL customHomeScreenRowsEnabled;
+static BOOL customHomeScreenColumnsEnabled;
+static BOOL customFolderRowsEnabled;
+static BOOL customFolderColumnsEnabled;
+static BOOL customDockColumnsEnabled;
+static NSUInteger customHomeScreenRows;
+static NSUInteger customHomeScreenColumns;
+static NSUInteger customFolderRows;
+static NSUInteger customFolderColumns;
+static NSUInteger customDockColumns;
 
 // ------------------------------ DETAILED DOWNLOAD BAR WHILE DOWNLOADING APPS ------------------------------
 

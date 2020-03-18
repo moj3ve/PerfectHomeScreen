@@ -1,33 +1,3 @@
-#import <Cephei/HBPreferences.h>
-#import "SparkAppList.h"
-
-HBPreferences *_Nullable pref;
-
-BOOL progressBarWhenDownloading;
-BOOL autoCloseFolders;
-BOOL hideAppIcons;
-BOOL hideAppLabels;
-BOOL hideBlueDot;
-BOOL hideShareAppShortcut;
-
-BOOL customHomeScreenLayoutEnabled;
-
-BOOL customHomeScreenRowsEnabled;
-BOOL customHomeScreenColumnsEnabled;
-
-BOOL customFolderRowsEnabled;
-BOOL customFolderColumnsEnabled;
-
-BOOL customDockColumnsEnabled;
-
-NSUInteger customHomeScreenRows;
-NSUInteger customHomeScreenColumns;
-
-NSUInteger customFolderRows;
-NSUInteger customFolderColumns;
-
-NSUInteger customDockColumns;
-
 @interface SBIconProgressView: UIView
 @property(nonatomic, strong) UILabel *_Nullable progressLabel;
 @property(nonatomic, strong) UIView *_Nullable progressBar;
