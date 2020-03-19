@@ -52,7 +52,7 @@ static NSUInteger customDockColumns;
 			self.progressBar = [[UIView alloc] init];
 			self.progressBar.backgroundColor = [UIColor systemBlueColor];
 			self.progressBar.layer.cornerRadius = 13;
-			self.progressBar.alpha = 0.6;
+			self.progressBar.alpha = 0.7;
 
 			self.progressLabel = [[UILabel alloc] init];
 			self.progressLabel.font = [UIFont boldSystemFontOfSize: 14];
