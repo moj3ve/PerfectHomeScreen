@@ -9,7 +9,7 @@ PerfectHomeScreen13Prefs_INSTALL_PATH = /Library/PreferenceBundles
 PerfectHomeScreen13Prefs_FRAMEWORKS = UIKit
 PerfectHomeScreen13Prefs_PRIVATE_FRAMEWORKS = Preferences
 PerfectHomeScreen13Prefs_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
-PerfectHomeScreen13Prefs_LIBRARIES = sparkapplist
+PerfectHomeScreen13Prefs_LIBRARIES += sparkapplist sparkcolourpicker
 PerfectHomeScreen13Prefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs
 
 include $(THEOS_MAKE_PATH)/bundle.mk

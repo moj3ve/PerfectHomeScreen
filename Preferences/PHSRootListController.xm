@@ -1,5 +1,6 @@
 #include "PHSRootListController.h"
 #import "SparkAppListTableViewController.h"
+#import "SparkColourPickerView.h"
 #import "spawn.h"
 
 @implementation PHSRootListController

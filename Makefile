@@ -10,7 +10,7 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = PerfectHomeScreen13
 PerfectHomeScreen13_FILES = PerfectHomeScreen13.xm
 PerfectHomeScreen13_CFLAGS = -fobjc-arc -Wno-logical-op-parentheses
-PerfectHomeScreen13_LIBRARIES = sparkapplist
+PerfectHomeScreen13_LIBRARIES += sparkapplist sparkcolourpicker
 PerfectHomeScreen13_EXTRA_FRAMEWORKS += Cephei
 
 include $(THEOS_MAKE_PATH)/tweak.mk

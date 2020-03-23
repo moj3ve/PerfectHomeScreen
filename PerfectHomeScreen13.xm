@@ -2,16 +2,20 @@
 
 #import <Cephei/HBPreferences.h>
 #import "SparkAppList.h"
+#import "SparkColourPickerUtils.h"
 
 #define IS_iPAD ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
 static HBPreferences *pref;
 static BOOL progressBarWhenDownloading;
+static BOOL enableCustomProgressBarColor;
+static UIColor *customProgressBarColor;
 static BOOL autoCloseFolders;
 static BOOL hideAppIcons;
 static BOOL hideAppLabels;
 static BOOL hideBlueDot;
 static BOOL hideShareAppShortcut;
+static BOOL enableHomeScreenRotation;
 static BOOL customHomeScreenLayoutEnabled;
 static BOOL customHomeScreenRowsEnabled;
 static BOOL customHomeScreenColumnsEnabled;
@@ -50,7 +54,7 @@ static NSUInteger customDockColumns;
 		if ((self = %orig))
 		{
 			self.progressBar = [[UIView alloc] init];
-			self.progressBar.backgroundColor = [UIColor systemBlueColor];
+			self.progressBar.backgroundColor = customProgressBarColor ? customProgressBarColor : [UIColor systemBlueColor];
 			self.progressBar.layer.cornerRadius = 13;
 			self.progressBar.alpha = 0.7;
 
@@ -190,6 +194,27 @@ static NSUInteger customDockColumns;
 
 %end
 
+// ------------------------------ ENABLE / DISABLE HOME SCREEN ROTATION ------------------------------
+
+%group homeScreenRotationGroup
+
+	%hook SpringBoard
+
+	-(BOOL)_statusBarOrientationFollowsWindow:(id)arg1
+	{
+		return NO;
+	}
+	
+	-(long long)homeScreenRotationStyle
+	{
+		if(enableHomeScreenRotation) return 2;
+		else return 0;
+	}
+
+	%end
+
+%end
+
 // ------------------------------ CUSTOM HOME SCREEN LAYOUT ------------------------------
 
 %group customHomeScreenLayoutGroup
@@ -220,7 +245,9 @@ static NSUInteger customDockColumns;
 	{
 		[self findLocation];
 		
-		if([self.location isEqualToString: @"Folder"] && customFolderRowsEnabled)
+		if([self.location isEqualToString: @"Dock"] && customDockColumnsEnabled && !IS_iPAD)
+			return 1;
+		else if([self.location isEqualToString: @"Folder"] && customFolderRowsEnabled)
 			return customFolderRows;
 		else if([self.location isEqualToString: @"Home"] && customHomeScreenRowsEnabled)
 			return customHomeScreenRows;
@@ -232,11 +259,16 @@ static NSUInteger customDockColumns;
 	{
 		[self findLocation];
 		
-		if([self.location isEqualToString: @"Folder"] && customFolderRowsEnabled)
+		if([self.location isEqualToString: @"Dock"] && customDockColumnsEnabled && !IS_iPAD)
+			return customDockColumns;
+		else if([self.location isEqualToString: @"Folder"] && customFolderRowsEnabled)
 			return customFolderRows;
 		else if([self.location isEqualToString: @"Home"] && customHomeScreenRowsEnabled)
-			return customHomeScreenRows;
-
+		{
+			if(IS_iPAD) return customHomeScreenRows;
+			else return customHomeScreenColumns;
+		}
+		
 		return %orig;
 	}
 
@@ -259,11 +291,14 @@ static NSUInteger customDockColumns;
 		[self findLocation];
 		
 		if([self.location isEqualToString: @"Dock"] && customDockColumnsEnabled && !IS_iPAD)
-			return customDockColumns;
+			return 1;
 		else if([self.location isEqualToString: @"Folder"] && customFolderColumnsEnabled)
 			return customFolderColumns;
 		else if([self.location isEqualToString: @"Home"] && customHomeScreenColumnsEnabled)
-			return customHomeScreenColumns;
+		{
+			if(IS_iPAD) return customHomeScreenColumns;
+			else return customHomeScreenRows;
+		}
 		
 		return %orig;
 	}
@@ -280,6 +315,18 @@ static NSUInteger customDockColumns;
 		else if([self.location isEqualToString: @"Home"] && !IS_iPAD && (customHomeScreenRowsEnabled || customHomeScreenColumnsEnabled))
 		{
 			if(customHomeScreenRows > 6 || customHomeScreenColumns > 4) return UIEdgeInsetsMake(x.top - 20, x.left - 15, x.bottom - 40, x.right - 15);
+		}
+		return x;
+	}
+
+	-(UIEdgeInsets)landscapeLayoutInsets
+	{
+		[self findLocation];
+		UIEdgeInsets x = %orig;
+		
+		if([self.location isEqualToString: @"Home"] && !IS_iPAD && (customHomeScreenRowsEnabled || customHomeScreenColumnsEnabled))
+		{
+			if(customHomeScreenRows > 6 || customHomeScreenColumns > 4) return UIEdgeInsetsMake(x.top, x.left + 15, x.bottom, x.right);
 		}
 		return x;
 	}
@@ -307,9 +354,11 @@ static NSUInteger customDockColumns;
 			@"hideAppLabels": @NO,
 			@"hideBlueDot": @NO,
 			@"progressBarWhenDownloading": @NO,
+			@"enableCustomProgressBarColor": @NO,
 			@"hideAppIcons": @NO,
 			@"autoCloseFolders": @NO,
 			@"hideShareAppShortcut": @NO,
+			@"enableHomeScreenRotation": @NO,
 			@"customHomeScreenLayoutEnabled": @NO,
 			@"customHomeScreenRowsEnabled": @NO,
 			@"customHomeScreenColumnsEnabled": @NO,
@@ -326,16 +375,30 @@ static NSUInteger customDockColumns;
 		hideAppLabels = [pref boolForKey: @"hideAppLabels"];
 		hideBlueDot = [pref boolForKey: @"hideBlueDot"];
 		progressBarWhenDownloading = [pref boolForKey: @"progressBarWhenDownloading"];
+		enableCustomProgressBarColor = [pref boolForKey: @"enableCustomProgressBarColor"];
+
 		hideAppIcons = [pref boolForKey: @"hideAppIcons"];
 		autoCloseFolders = [pref boolForKey: @"autoCloseFolders"];
 		hideShareAppShortcut = [pref boolForKey: @"hideShareAppShortcut"];
+		enableHomeScreenRotation = [pref boolForKey: @"enableHomeScreenRotation"];
+
+		if(progressBarWhenDownloading) 
+		{
+			if(enableCustomProgressBarColor)
+			{
+				NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.johnzaro.perfecthomescreen13prefs.colors.plist"];
+				customProgressBarColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customProgressBarColor"] withFallback: @"#FF9400"];
+			}
+			%init(progressBarWhenDownloadingGroup);
+		}
 
 		if(hideAppLabels) %init(hideAppLabelsGroup);
 		if(hideBlueDot) %init(hideBlueDotGroup);
-		if(progressBarWhenDownloading) %init(progressBarWhenDownloadingGroup);
 		if(hideAppIcons) %init(hideAppIconsGroup);
 		if(autoCloseFolders) %init(autoCloseFoldersGroup);
 		if(hideShareAppShortcut) %init(hideShareAppShortcutGroup);
+
+		if(!IS_iPAD) %init(homeScreenRotationGroup);
 
 		customHomeScreenLayoutEnabled = [pref boolForKey: @"customHomeScreenLayoutEnabled"];
 		if(customHomeScreenLayoutEnabled)
