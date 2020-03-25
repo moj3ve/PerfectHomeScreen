@@ -219,6 +219,32 @@ static NSUInteger customDockColumns;
 
 %group customHomeScreenLayoutGroup
 
+	%hook _SBIconGridWrapperView
+
+	- (void)setBounds: (CGRect)arg1
+	{
+		int rowsOffset = 0, columnsOffset = 0;
+		if(customFolderRowsEnabled)
+		{
+			if(customFolderRows == 4) rowsOffset = 5;
+			else if(customFolderRows == 5) rowsOffset = 13;
+		}
+		if(customFolderColumnsEnabled)
+		{
+			if(customFolderColumns == 4) columnsOffset = 5;
+			else if(customFolderColumns == 5) columnsOffset = 13;
+		}
+
+		if(rowsOffset != 0 || columnsOffset != 0)
+		{
+			CGRect newFrame = CGRectMake(arg1.origin.x + columnsOffset, arg1.origin.y + rowsOffset, arg1.size.width - 2 * columnsOffset, arg1.size.height - 2 * rowsOffset);
+			%orig(newFrame);
+		}
+		else %orig;
+	}
+
+	%end
+
 // Idea For The "findLocation" Method @KritantaDev: https://github.com/KritantaDev/HomePlus
 
 	%hook SBIconListGridLayoutConfiguration
@@ -308,13 +334,40 @@ static NSUInteger customDockColumns;
 		[self findLocation];
 		UIEdgeInsets x = %orig;
 		
-		if([self.location isEqualToString: @"Folder"] && (customFolderRowsEnabled || customFolderColumnsEnabled))
+		if([self.location isEqualToString: @"Folder"] && !IS_iPAD && (customFolderRowsEnabled || customFolderColumnsEnabled))
 		{
-			if(!IS_iPAD && (customFolderRows > 3 || customFolderColumns > 3)) return UIEdgeInsetsMake(x.top - 15, x.left - 15, x.bottom - 15, x.right - 15);
+			int rowsOffset = 0, columnsOffset = 0;
+			if(customFolderRowsEnabled)
+			{
+				if(customFolderRows == 2) rowsOffset = 40;
+				else if(customFolderRows > 3) rowsOffset = -15;
+			}
+			if(customFolderColumnsEnabled)
+			{
+				if(customFolderColumns == 2) columnsOffset = 40;
+				else if(customFolderColumns > 3) columnsOffset = -15;
+			}
+			
+			if(rowsOffset != 0 || columnsOffset != 0)
+				return UIEdgeInsetsMake(x.top + rowsOffset, x.left + columnsOffset, x.bottom + rowsOffset, x.right + columnsOffset);
 		}
 		else if([self.location isEqualToString: @"Home"] && !IS_iPAD && (customHomeScreenRowsEnabled || customHomeScreenColumnsEnabled))
 		{
-			if(customHomeScreenRows > 6 || customHomeScreenColumns > 4) return UIEdgeInsetsMake(x.top - 20, x.left - 15, x.bottom - 40, x.right - 15);
+			int rowsOffset = 0, columnsOffset = 0;
+			if(customHomeScreenRowsEnabled)
+			{
+				if(customHomeScreenRows == 3) rowsOffset = 100;
+				else if(customHomeScreenRows == 4) rowsOffset = 60;
+				else if(customHomeScreenRows > 6) rowsOffset = -20;
+			}
+			if(customHomeScreenColumnsEnabled)
+			{
+				if(customHomeScreenColumns == 3) columnsOffset = 30;
+				else if(customHomeScreenColumns > 4) columnsOffset = -15;
+			}
+			
+			if(rowsOffset != 0 || columnsOffset != 0)
+				return UIEdgeInsetsMake(x.top + rowsOffset, x.left + columnsOffset, x.bottom + rowsOffset, x.right + columnsOffset);
 		}
 		return x;
 	}
@@ -324,9 +377,41 @@ static NSUInteger customDockColumns;
 		[self findLocation];
 		UIEdgeInsets x = %orig;
 		
-		if([self.location isEqualToString: @"Home"] && !IS_iPAD && (customHomeScreenRowsEnabled || customHomeScreenColumnsEnabled))
+		if([self.location isEqualToString: @"Folder"] && !IS_iPAD && (customFolderRowsEnabled || customFolderColumnsEnabled))
 		{
-			if(customHomeScreenRows > 6 || customHomeScreenColumns > 4) return UIEdgeInsetsMake(x.top, x.left + 15, x.bottom, x.right);
+			int rowsOffset = 0, columnsOffset = 0;
+			if(customFolderRowsEnabled)
+			{
+				if(customFolderRows == 2) rowsOffset = 40;
+				else if(customFolderRows > 3) rowsOffset = -15;
+			}
+			if(customFolderColumnsEnabled)
+			{
+				if(customFolderColumns == 2) columnsOffset = 40;
+				else if(customFolderColumns > 3) columnsOffset = -15;
+			}
+			
+			if(rowsOffset != 0 || columnsOffset != 0)
+				return UIEdgeInsetsMake(x.top + rowsOffset, x.left + columnsOffset, x.bottom + rowsOffset, x.right + columnsOffset);
+		}
+		else if([self.location isEqualToString: @"Home"] && !IS_iPAD && (customHomeScreenRowsEnabled || customHomeScreenColumnsEnabled))
+		{
+			int rowsOffset = 0, columnsOffset = 0;
+			if(customHomeScreenRowsEnabled)
+			{
+				if(customHomeScreenRows == 3) columnsOffset = 100;
+				else if(customHomeScreenRows == 4 || customHomeScreenRows == 5 || customHomeScreenRows == 6) columnsOffset = 70;
+				else if(customHomeScreenRows > 6) columnsOffset = 60;
+			}
+			if(customHomeScreenColumnsEnabled)
+			{
+				if(customHomeScreenColumns == 3) rowsOffset = -20;
+				else if(customHomeScreenColumns == 4) rowsOffset = -40;
+				else if(customHomeScreenColumns >= 5) rowsOffset = -60;
+			}
+			
+			if(rowsOffset != 0 || columnsOffset != 0)
+				return UIEdgeInsetsMake(x.top + rowsOffset, x.left + columnsOffset + 20, x.bottom + rowsOffset + 20, x.right + columnsOffset - 20);
 		}
 		return x;
 	}
