@@ -25,3 +25,9 @@
 @property(nonatomic, assign) NSString *_Nullable location;
 - (NSString *_Nullable)findLocation;
 @end
+
+@interface SBHIconViewContextMenuWrapperViewController : UIViewController
+@end
+
+@interface _UICutoutShadowView : UIView
+@end

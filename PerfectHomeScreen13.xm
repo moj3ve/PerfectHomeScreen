@@ -14,6 +14,7 @@ static BOOL autoCloseFolders;
 static BOOL hideAppIcons;
 static BOOL hideAppLabels;
 static BOOL hideBlueDot;
+static BOOL hideWidgetsIn3DTouch;
 static BOOL hideShareAppShortcut;
 static BOOL enableHomeScreenRotation;
 static BOOL customHomeScreenLayoutEnabled;
@@ -165,6 +166,30 @@ static NSUInteger customDockColumns;
 	- (BOOL)allowsLabelAccessoryView
 	{
 		return NO;
+	}
+
+	%end
+
+%end
+
+// ------------------------------ HIDE WIDGETS IN 3D TOUCH ------------------------------
+
+%group hideWidgetsIn3DTouchGroup
+
+	%hook SBHIconViewContextMenuWrapperViewController
+
+	-(void)viewWillAppear:(BOOL)arg1
+	{
+		[[self view] setHidden: YES];
+	}
+
+	%end
+
+	%hook _UICutoutShadowView
+
+	- (void)layoutSubviews
+	{
+		[self setHidden: YES];
 	}
 
 	%end
@@ -442,6 +467,7 @@ static NSUInteger customDockColumns;
 			@"enableCustomProgressBarColor": @NO,
 			@"hideAppIcons": @NO,
 			@"autoCloseFolders": @NO,
+			@"hideWidgetsIn3DTouch": @NO,
 			@"hideShareAppShortcut": @NO,
 			@"enableHomeScreenRotation": @NO,
 			@"customHomeScreenLayoutEnabled": @NO,
@@ -464,6 +490,7 @@ static NSUInteger customDockColumns;
 
 		hideAppIcons = [pref boolForKey: @"hideAppIcons"];
 		autoCloseFolders = [pref boolForKey: @"autoCloseFolders"];
+		hideWidgetsIn3DTouch = [pref boolForKey: @"hideWidgetsIn3DTouch"];
 		hideShareAppShortcut = [pref boolForKey: @"hideShareAppShortcut"];
 		enableHomeScreenRotation = [pref boolForKey: @"enableHomeScreenRotation"];
 
@@ -481,6 +508,7 @@ static NSUInteger customDockColumns;
 		if(hideBlueDot) %init(hideBlueDotGroup);
 		if(hideAppIcons) %init(hideAppIconsGroup);
 		if(autoCloseFolders) %init(autoCloseFoldersGroup);
+		if(hideWidgetsIn3DTouch) %init(hideWidgetsIn3DTouchGroup);
 		if(hideShareAppShortcut) %init(hideShareAppShortcutGroup);
 
 		if(!IS_iPAD) %init(homeScreenRotationGroup);
