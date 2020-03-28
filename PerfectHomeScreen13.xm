@@ -14,6 +14,10 @@ static BOOL autoCloseFolders;
 static BOOL hideAppIcons;
 static BOOL hideAppLabels;
 static BOOL hideBlueDot;
+static BOOL customBgTextColorEnable;
+static BOOL customTextColorEnable;
+static UIColor *customBgTextColor;
+static UIColor *customTextColor;
 static BOOL hideWidgetsIn3DTouch;
 static BOOL hideShareAppShortcut;
 static BOOL enableHomeScreenRotation;
@@ -178,7 +182,7 @@ static NSUInteger customDockColumns;
 
 	%hook SBHIconViewContextMenuWrapperViewController
 
-	-(void)viewWillAppear:(BOOL)arg1
+	- (void)viewWillAppear: (BOOL)arg1
 	{
 		[[self view] setHidden: YES];
 	}
@@ -202,7 +206,7 @@ static NSUInteger customDockColumns;
 
 	%hook SBIconView
 
-	- (void)setApplicationShortcutItems: (NSArray *)arg1
+	- (void)setApplicationShortcutItems: (NSArray*)arg1
 	{
 		NSMutableArray *newShortcuts = [[NSMutableArray alloc] init];
 		for(SBSApplicationShortcutItem *shortcut in arg1)
@@ -454,6 +458,32 @@ static NSUInteger customDockColumns;
 
 %end
 
+%group customBgTextColorGroup
+
+	%hook SBMutableIconLabelImageParameters
+
+	- (void)setFocusHighlightColor: (id)arg
+	{
+		%orig(customBgTextColor);
+	}
+
+	%end
+
+%end
+
+%group customTextColorGroup
+
+	%hook SBMutableIconLabelImageParameters
+
+	- (void)setTextColor: (id)arg
+	{
+		%orig(customTextColor);
+	}
+
+	%end
+
+%end
+
 %ctor
 {
 	@autoreleasepool
@@ -463,6 +493,8 @@ static NSUInteger customDockColumns;
 		@{
 			@"hideAppLabels": @NO,
 			@"hideBlueDot": @NO,
+			@"customBgTextColorEnable": @NO,
+			@"customTextColorEnable": @NO,
 			@"progressBarWhenDownloading": @NO,
 			@"enableCustomProgressBarColor": @NO,
 			@"hideAppIcons": @NO,
@@ -485,6 +517,8 @@ static NSUInteger customDockColumns;
 
 		hideAppLabels = [pref boolForKey: @"hideAppLabels"];
 		hideBlueDot = [pref boolForKey: @"hideBlueDot"];
+		customBgTextColorEnable = [pref boolForKey: @"customBgTextColorEnable"];
+		customTextColorEnable = [pref boolForKey: @"customTextColorEnable"];
 		progressBarWhenDownloading = [pref boolForKey: @"progressBarWhenDownloading"];
 		enableCustomProgressBarColor = [pref boolForKey: @"enableCustomProgressBarColor"];
 
@@ -494,22 +528,26 @@ static NSUInteger customDockColumns;
 		hideShareAppShortcut = [pref boolForKey: @"hideShareAppShortcut"];
 		enableHomeScreenRotation = [pref boolForKey: @"enableHomeScreenRotation"];
 
-		if(progressBarWhenDownloading) 
+		if(customBgTextColorEnable || customTextColorEnable || progressBarWhenDownloading) 
 		{
-			if(enableCustomProgressBarColor)
-			{
-				NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.johnzaro.perfecthomescreen13prefs.colors.plist"];
+			NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.johnzaro.perfecthomescreen13prefs.colors.plist"];
+			
+			customBgTextColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customBgTextColor"] withFallback: @"#FFFFFF"];
+			customTextColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customTextColor"] withFallback: @"#FF9400"];
+			
+			if(enableCustomProgressBarColor) 
 				customProgressBarColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customProgressBarColor"] withFallback: @"#FF9400"];
-			}
-			%init(progressBarWhenDownloadingGroup);
 		}
 
 		if(hideAppLabels) %init(hideAppLabelsGroup);
 		if(hideBlueDot) %init(hideBlueDotGroup);
+		if(customBgTextColorEnable) %init(customBgTextColorGroup);
+		if(customTextColorEnable) %init(customTextColorGroup);
 		if(hideAppIcons) %init(hideAppIconsGroup);
 		if(autoCloseFolders) %init(autoCloseFoldersGroup);
 		if(hideWidgetsIn3DTouch) %init(hideWidgetsIn3DTouchGroup);
 		if(hideShareAppShortcut) %init(hideShareAppShortcutGroup);
+		if(progressBarWhenDownloading) %init(progressBarWhenDownloadingGroup);
 
 		if(!IS_iPAD) %init(homeScreenRotationGroup);
 
@@ -530,5 +568,6 @@ static NSUInteger customDockColumns;
 
 			%init(customHomeScreenLayoutGroup);
 		}
+		%init;
 	}
 }
