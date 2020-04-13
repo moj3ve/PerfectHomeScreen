@@ -10,7 +10,11 @@ static HBPreferences *pref;
 static BOOL progressBarWhenDownloading;
 static BOOL enableCustomProgressBarColor;
 static UIColor *customProgressBarColor;
+static BOOL enableCustomDockRadius;
+static NSUInteger dockCornerRadius;
 static BOOL autoCloseFolders;
+static BOOL customCornerRadius;
+static NSUInteger iconCornerRadius;
 static BOOL hideAppIcons;
 static BOOL hideAppLabels;
 static BOOL hideBlueDot;
@@ -170,6 +174,28 @@ static NSUInteger customDockColumns;
 	- (BOOL)allowsLabelAccessoryView
 	{
 		return NO;
+	}
+
+	%end
+
+%end
+
+// ------------------------------ CUSTOM CORNER RADIUS ------------------------------
+
+%group customCornerRadiusGroup
+
+	%hook SBIconImageView
+
+	-(id)initWithFrame:(CGRect)arg1
+	{
+		self = %orig;
+
+		if(![self isKindOfClass: %c(SBFolderIconImageView)])
+		{
+			[[self layer] setCornerRadius: iconCornerRadius];
+			[self setClipsToBounds: YES];
+		}
+		return self;
 	}
 
 	%end
@@ -484,6 +510,21 @@ static NSUInteger customDockColumns;
 
 %end
 
+%group customDockRadiusGroup
+
+	%hook SBDockView
+
+	- (void)layoutSubviews
+	{
+		%orig;
+		UIView *backgroundView = [self subviews][0];
+		[[backgroundView layer] setCornerRadius: dockCornerRadius];
+	}
+
+	%end
+
+%end
+
 %ctor
 {
 	@autoreleasepool
@@ -498,7 +539,11 @@ static NSUInteger customDockColumns;
 			@"progressBarWhenDownloading": @NO,
 			@"enableCustomProgressBarColor": @NO,
 			@"hideAppIcons": @NO,
+			@"enableCustomDockRadius": @NO,
+			@"dockCornerRadius": @30,
 			@"autoCloseFolders": @NO,
+			@"customCornerRadius": @NO,
+			@"iconCornerRadius": @20,
 			@"hideWidgetsIn3DTouch": @NO,
 			@"hideShareAppShortcut": @NO,
 			@"enableHomeScreenRotation": @NO,
@@ -523,7 +568,9 @@ static NSUInteger customDockColumns;
 		enableCustomProgressBarColor = [pref boolForKey: @"enableCustomProgressBarColor"];
 
 		hideAppIcons = [pref boolForKey: @"hideAppIcons"];
+		enableCustomDockRadius = [pref boolForKey: @"enableCustomDockRadius"];
 		autoCloseFolders = [pref boolForKey: @"autoCloseFolders"];
+		customCornerRadius = [pref boolForKey: @"customCornerRadius"];
 		hideWidgetsIn3DTouch = [pref boolForKey: @"hideWidgetsIn3DTouch"];
 		hideShareAppShortcut = [pref boolForKey: @"hideShareAppShortcut"];
 		enableHomeScreenRotation = [pref boolForKey: @"enableHomeScreenRotation"];
@@ -544,7 +591,17 @@ static NSUInteger customDockColumns;
 		if(customBgTextColorEnable) %init(customBgTextColorGroup);
 		if(customTextColorEnable) %init(customTextColorGroup);
 		if(hideAppIcons) %init(hideAppIconsGroup);
+		if(enableCustomDockRadius)
+		{
+			dockCornerRadius = [pref integerForKey: @"dockCornerRadius"];
+			%init(customDockRadiusGroup);
+		} 
 		if(autoCloseFolders) %init(autoCloseFoldersGroup);
+		if(customCornerRadius)
+		{
+			iconCornerRadius = [pref integerForKey: @"iconCornerRadius"];
+			%init(customCornerRadiusGroup);
+		} 
 		if(hideWidgetsIn3DTouch) %init(hideWidgetsIn3DTouchGroup);
 		if(hideShareAppShortcut) %init(hideShareAppShortcutGroup);
 		if(progressBarWhenDownloading) %init(progressBarWhenDownloadingGroup);
@@ -568,6 +625,5 @@ static NSUInteger customDockColumns;
 
 			%init(customHomeScreenLayoutGroup);
 		}
-		%init;
 	}
 }

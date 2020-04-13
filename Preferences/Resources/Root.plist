@@ -68,6 +68,36 @@
 			<key>defaults</key>
 			<string>com.johnzaro.perfecthomescreen13prefs</string>
 			<key>key</key>
+			<string>customCornerRadius</string>
+			<key>label</key>
+			<string>Custom Corner Radius</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBStepperTableCell</string>
+			<key>default</key>
+			<real>20</real>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>iconCornerRadius</string>
+			<key>label</key>
+			<string>%i pixels</string>
+			<key>singularLabel</key>
+			<string>1 pixel</string>
+			<key>max</key>
+			<real>30</real>
+			<key>min</key>
+			<real>0</real>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
 			<string>customBgTextColorEnable</string>
 			<key>label</key>
 			<string>Custom Background Text Color</string>
@@ -205,6 +235,42 @@
 			<key>action</key>
 			<string>selectAppsToHide</string>
    	 	</dict>
+			<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>DOCK</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>enableCustomDockRadius</string>
+			<key>label</key>
+			<string>Custom Dock Radius</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBStepperTableCell</string>
+			<key>default</key>
+			<real>30</real>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>dockCornerRadius</string>
+			<key>label</key>
+			<string>%i Pixels</string>
+			<key>singularLabel</key>
+			<string>1 Pixel</string>
+			<key>max</key>
+			<real>60</real>
+			<key>min</key>
+			<real>0</real>
+		</dict>
 		<dict>
         	<key>cell</key>
 			<string>PSGroupCell</string>

@@ -31,3 +31,9 @@
 
 @interface _UICutoutShadowView : UIView
 @end
+
+@interface SBIconImageView: UIImageView
+@end
+
+@interface SBDockView: UIView
+@end
