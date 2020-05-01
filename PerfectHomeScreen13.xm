@@ -7,12 +7,26 @@
 #define IS_iPAD ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
 static HBPreferences *pref;
+static BOOL enabled;
 static BOOL progressBarWhenDownloading;
 static BOOL enableCustomProgressBarColor;
 static UIColor *customProgressBarColor;
 static BOOL enableCustomDockRadius;
 static NSUInteger dockCornerRadius;
+static BOOL hideFolderTitle;
+static BOOL folderTitleBold;
+static BOOL enableCustomFolderTitleColor;
+static UIColor *customFolderTitleColor;
+static BOOL enableFolderTitleCustomFontSize;
+static NSUInteger folderTitleCustomFontSize;
 static BOOL autoCloseFolders;
+static BOOL pinchToCloseFolder;
+static BOOL enableCustomFolderIconBackgroundColor;
+static UIColor *customFolderIconBackgroundColor;
+static BOOL enableCustomFolderCornerRadius;
+static NSUInteger folderCornerRadius;
+static BOOL enableCustomFolderBackgroundColor;
+static UIColor *customFolderBackgroundColor;
 static BOOL customCornerRadius;
 static NSUInteger iconCornerRadius;
 static BOOL hideAppIcons;
@@ -24,6 +38,7 @@ static UIColor *customBgTextColor;
 static UIColor *customTextColor;
 static BOOL hideWidgetsIn3DTouch;
 static BOOL hideShareAppShortcut;
+static BOOL addGetBundleIDShortcut;
 static BOOL enableHomeScreenRotation;
 static BOOL customHomeScreenLayoutEnabled;
 static BOOL customHomeScreenRowsEnabled;
@@ -107,6 +122,69 @@ static NSUInteger customDockColumns;
 
 %end
 
+// ------------------------------ HIDE FOLDER TITLE ------------------------------
+
+%group hideFolderTitleGroup
+
+	%hook SBFloatyFolderView
+
+	- (BOOL)_showsTitle
+	{
+		return NO;
+	}
+
+	%end
+
+%end
+
+// ------------------------------ CUSTOM FOLDER TITLE FONT WEIGHT ------------------------------
+
+%group folderTitleBoldGroup
+
+	%hook SBFolderTitleTextField
+
+	- (void)setFont: (UIFont*)font
+	{
+		if(enableFolderTitleCustomFontSize)
+			%orig([UIFont boldSystemFontOfSize: folderTitleCustomFontSize]);
+		else
+			%orig([UIFont boldSystemFontOfSize: 36]);
+	}
+
+	%end
+
+%end
+
+// ------------------------------ CUSTOM FOLDER TITLE FONT SIZE ------------------------------
+
+%group folderTitleCustomFontSizeGroup
+
+	%hook SBFloatyFolderView
+
+	- (double)_titleFontSize
+	{
+		return folderTitleCustomFontSize;
+	}
+
+	%end
+
+%end
+
+// ------------------------------ CUSTOM FOLDER TITLE COLOR ------------------------------
+
+%group customFolderTitleColorGroup
+
+	%hook SBFolderTitleTextField
+
+	- (void)setTextColor: (UIColor*)color
+	{
+		%orig(customFolderTitleColor);
+	}
+
+	%end
+
+%end
+
 // ------------------------------ AUTO CLOSE FOLDERS ------------------------------
 
 %group autoCloseFoldersGroup
@@ -118,6 +196,95 @@ static NSUInteger customDockColumns;
 		if([self openedFolderController] && [[self openedFolderController] isOpen]) [[self openedFolderController] _closeFolderTimerFired];
 		
 		%orig;
+	}
+
+	%end
+
+%end
+
+// ------------------------------ PINCH TO CLOSE FOLDERS ------------------------------
+
+%group pinchToCloseFolderGroup
+
+	%hook SBFolderSettings
+
+	- (BOOL)pinchToClose
+	{
+		return YES;
+	}
+
+	%end
+
+	%hook SBHFolderSettings
+
+	- (BOOL)pinchToClose
+	{
+		return YES;
+	}
+
+	%end
+
+%end
+
+// ------------------------------ CUSTOM FOLDER ICON BACKGROUND COLOR ------------------------------
+
+%group customFolderIconBackgroundColorGroup
+
+	%hook SBFolderIconImageView
+
+	- (void)layoutSubviews
+	{ 
+		%orig;
+
+		[[[self backgroundView] blurView] setHidden: YES];
+		[[self backgroundView] setBackgroundColor: customFolderIconBackgroundColor];
+	}
+
+	%end
+
+%end
+
+// ------------------------------ CUSTOM FOLDER CORNER RADIUS ------------------------------
+
+%group customFolderCornerRadiusGroup
+
+	%hook SBFloatyFolderView
+
+	- (void)setCornerRadius: (double)arg1
+	{
+		%orig(folderCornerRadius);
+	}
+
+	%end
+
+	%hook SBHFloatyFolderVisualConfiguration
+
+	- (CGFloat)continuousCornerRadius
+	{
+		return folderCornerRadius;
+	}
+
+	%end
+
+%end
+
+// ------------------------------ CUSTOM FOLDER BACKGROUND COLOR ------------------------------
+
+%group customFolderBackgroundColorGroup
+
+	%hook SBFolderBackgroundView
+
+	-(void)layoutSubviews
+	{
+		%orig;
+		
+		[self setBackgroundColor: customFolderBackgroundColor];
+		[[self subviews] makeObjectsPerformSelector: @selector(removeFromSuperview)];
+
+		if(enableCustomFolderCornerRadius)
+			[[self layer] setCornerRadius: folderCornerRadius];
+		else
+			[[self layer] setCornerRadius: 38];
 	}
 
 	%end
@@ -182,25 +349,25 @@ static NSUInteger customDockColumns;
 
 // ------------------------------ CUSTOM CORNER RADIUS ------------------------------
 
-%group customCornerRadiusGroup
+// %group customCornerRadiusGroup
 
-	%hook SBIconImageView
+// 	%hook SBIconImageView
 
-	-(id)initWithFrame:(CGRect)arg1
-	{
-		self = %orig;
+// 	-(id)initWithFrame:(CGRect)arg1
+// 	{
+// 		self = %orig;
 
-		if(![self isKindOfClass: %c(SBFolderIconImageView)])
-		{
-			[[self layer] setCornerRadius: iconCornerRadius];
-			[self setClipsToBounds: YES];
-		}
-		return self;
-	}
+// 		if(![self isKindOfClass: %c(SBFolderIconImageView)])
+// 		{
+// 			[[self layer] setCornerRadius: iconCornerRadius];
+// 			[self setClipsToBounds: YES];
+// 		}
+// 		return self;
+// 	}
 
-	%end
+// 	%end
 
-%end
+// %end
 
 // ------------------------------ HIDE WIDGETS IN 3D TOUCH ------------------------------
 
@@ -243,6 +410,58 @@ static NSUInteger customDockColumns;
 		}
 
 		%orig(newShortcuts);
+	}
+
+	%end
+
+%end
+
+// ------------------------------ SHOW APP BUNDLE ID IN SHORTCUTS ------------------------------
+
+%group addGetBundleIDShortcutGroup
+
+	%hook SBIconView
+
+	- (NSArray*)applicationShortcutItems
+	{
+		NSArray *originalArray = %orig;
+
+		NSMutableArray *shortcutsArray = [originalArray mutableCopy];
+		if(!shortcutsArray)
+			shortcutsArray = [NSMutableArray new];
+
+		NSString *applicationBundleIdentifier;
+		if([self respondsToSelector: @selector(applicationBundleIdentifier)]) 
+			applicationBundleIdentifier = [self applicationBundleIdentifier];
+		else if([self respondsToSelector: @selector(applicationBundleIdentifierForShortcuts)])
+			applicationBundleIdentifier = [self applicationBundleIdentifierForShortcuts];
+		
+		if(applicationBundleIdentifier)
+		{
+			SBSApplicationShortcutItem *item = [[%c(SBSApplicationShortcutItem) alloc] init];
+			[item setLocalizedTitle: applicationBundleIdentifier];
+			[item setLocalizedSubtitle: @"Click To Copy"];
+			[item setBundleIdentifierToLaunch: nil];
+			[item setType: @"com.johnzaro.perfecthomescreen13.application-shortcut-item.app-bundleid"];
+			[shortcutsArray addObject: item];
+		}
+
+		return [shortcutsArray copy];
+	}
+
+	%end
+
+	%hook SBIconController
+
+	- (BOOL)iconManager: (id)arg1 shouldActivateApplicationShortcutItem: (id)arg2 atIndex: (unsigned long long)arg3 forIconView: (id)arg4
+	{
+		NSString *shortcutType = [(SBSApplicationShortcutItem*)arg2 type];
+		if([shortcutType isEqualToString: @"com.johnzaro.perfecthomescreen13.application-shortcut-item.app-bundleid"])
+		{
+			[[UIPasteboard generalPasteboard] setString: [arg2 localizedTitle]];
+			return NO;
+		}
+		else return %orig;
 	}
 
 	%end
@@ -527,11 +746,13 @@ static NSUInteger customDockColumns;
 
 %ctor
 {
+	%init;
 	@autoreleasepool
 	{
 		pref = [[HBPreferences alloc] initWithIdentifier: @"com.johnzaro.perfecthomescreen13prefs"];
 		[pref registerDefaults:
 		@{
+			@"enabled": @NO,
 			@"hideAppLabels": @NO,
 			@"hideBlueDot": @NO,
 			@"customBgTextColorEnable": @NO,
@@ -541,11 +762,21 @@ static NSUInteger customDockColumns;
 			@"hideAppIcons": @NO,
 			@"enableCustomDockRadius": @NO,
 			@"dockCornerRadius": @30,
+			@"hideFolderTitle": @NO,
+			@"folderTitleBold": @NO,
+			@"enableFolderTitleCustomFontSize": @NO,
+			@"enableCustomFolderTitleColor": @NO,
 			@"autoCloseFolders": @NO,
+			@"pinchToCloseFolder": @NO,
+			@"enableCustomFolderIconBackgroundColor": @NO,
+			@"enableCustomFolderCornerRadius": @NO,
+			@"folderCornerRadius": @38,
+			@"enableCustomFolderBackgroundColor": @NO,
 			@"customCornerRadius": @NO,
 			@"iconCornerRadius": @20,
 			@"hideWidgetsIn3DTouch": @NO,
 			@"hideShareAppShortcut": @NO,
+			@"addGetBundleIDShortcut": @NO,
 			@"enableHomeScreenRotation": @NO,
 			@"customHomeScreenLayoutEnabled": @NO,
 			@"customHomeScreenRowsEnabled": @NO,
@@ -560,70 +791,112 @@ static NSUInteger customDockColumns;
 			@"customDockColumns": @4
     	}];
 
-		hideAppLabels = [pref boolForKey: @"hideAppLabels"];
-		hideBlueDot = [pref boolForKey: @"hideBlueDot"];
-		customBgTextColorEnable = [pref boolForKey: @"customBgTextColorEnable"];
-		customTextColorEnable = [pref boolForKey: @"customTextColorEnable"];
-		progressBarWhenDownloading = [pref boolForKey: @"progressBarWhenDownloading"];
-		enableCustomProgressBarColor = [pref boolForKey: @"enableCustomProgressBarColor"];
-
-		hideAppIcons = [pref boolForKey: @"hideAppIcons"];
-		enableCustomDockRadius = [pref boolForKey: @"enableCustomDockRadius"];
-		autoCloseFolders = [pref boolForKey: @"autoCloseFolders"];
-		customCornerRadius = [pref boolForKey: @"customCornerRadius"];
-		hideWidgetsIn3DTouch = [pref boolForKey: @"hideWidgetsIn3DTouch"];
-		hideShareAppShortcut = [pref boolForKey: @"hideShareAppShortcut"];
-		enableHomeScreenRotation = [pref boolForKey: @"enableHomeScreenRotation"];
-
-		if(customBgTextColorEnable || customTextColorEnable || progressBarWhenDownloading) 
+		enabled = [pref boolForKey: @"enabled"];
+		if(enabled)
 		{
+			hideAppLabels = [pref boolForKey: @"hideAppLabels"];
+			hideBlueDot = [pref boolForKey: @"hideBlueDot"];
+			customBgTextColorEnable = [pref boolForKey: @"customBgTextColorEnable"];
+			customTextColorEnable = [pref boolForKey: @"customTextColorEnable"];
+			progressBarWhenDownloading = [pref boolForKey: @"progressBarWhenDownloading"];
+			enableCustomProgressBarColor = [pref boolForKey: @"enableCustomProgressBarColor"];
+
+			hideAppIcons = [pref boolForKey: @"hideAppIcons"];
+			enableCustomDockRadius = [pref boolForKey: @"enableCustomDockRadius"];
+			hideFolderTitle = [pref boolForKey: @"hideFolderTitle"];
+			folderTitleBold = [pref boolForKey: @"folderTitleBold"];
+			enableFolderTitleCustomFontSize = [pref boolForKey: @"enableFolderTitleCustomFontSize"];
+			enableCustomFolderTitleColor = [pref boolForKey: @"enableCustomFolderTitleColor"];
+			autoCloseFolders = [pref boolForKey: @"autoCloseFolders"];
+			pinchToCloseFolder = [pref boolForKey: @"pinchToCloseFolder"];
+			enableCustomFolderIconBackgroundColor = [pref boolForKey: @"enableCustomFolderIconBackgroundColor"];
+			enableCustomFolderCornerRadius = [pref boolForKey: @"enableCustomFolderCornerRadius"];
+			enableCustomFolderBackgroundColor = [pref boolForKey: @"enableCustomFolderBackgroundColor"];
+			customCornerRadius = [pref boolForKey: @"customCornerRadius"];
+			hideWidgetsIn3DTouch = [pref boolForKey: @"hideWidgetsIn3DTouch"];
+			hideShareAppShortcut = [pref boolForKey: @"hideShareAppShortcut"];
+			addGetBundleIDShortcut = [pref boolForKey: @"addGetBundleIDShortcut"];
+			enableHomeScreenRotation = [pref boolForKey: @"enableHomeScreenRotation"];
+
 			NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.johnzaro.perfecthomescreen13prefs.colors.plist"];
 			
-			customBgTextColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customBgTextColor"] withFallback: @"#FFFFFF"];
-			customTextColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customTextColor"] withFallback: @"#FF9400"];
-			
-			if(enableCustomProgressBarColor) 
-				customProgressBarColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customProgressBarColor"] withFallback: @"#FF9400"];
-		}
+			if(customBgTextColorEnable || customTextColorEnable || progressBarWhenDownloading) 
+			{
+				customBgTextColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customBgTextColor"] withFallback: @"#FFFFFF"];
+				customTextColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customTextColor"] withFallback: @"#FF9400"];
+				
+				if(enableCustomProgressBarColor) 
+					customProgressBarColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customProgressBarColor"] withFallback: @"#FF9400"];
+			}
 
-		if(hideAppLabels) %init(hideAppLabelsGroup);
-		if(hideBlueDot) %init(hideBlueDotGroup);
-		if(customBgTextColorEnable) %init(customBgTextColorGroup);
-		if(customTextColorEnable) %init(customTextColorGroup);
-		if(hideAppIcons) %init(hideAppIconsGroup);
-		if(enableCustomDockRadius)
-		{
-			dockCornerRadius = [pref integerForKey: @"dockCornerRadius"];
-			%init(customDockRadiusGroup);
-		} 
-		if(autoCloseFolders) %init(autoCloseFoldersGroup);
-		if(customCornerRadius)
-		{
-			iconCornerRadius = [pref integerForKey: @"iconCornerRadius"];
-			%init(customCornerRadiusGroup);
-		} 
-		if(hideWidgetsIn3DTouch) %init(hideWidgetsIn3DTouchGroup);
-		if(hideShareAppShortcut) %init(hideShareAppShortcutGroup);
-		if(progressBarWhenDownloading) %init(progressBarWhenDownloadingGroup);
+			if(hideAppLabels) %init(hideAppLabelsGroup);
+			if(hideBlueDot) %init(hideBlueDotGroup);
+			if(customBgTextColorEnable) %init(customBgTextColorGroup);
+			if(customTextColorEnable) %init(customTextColorGroup);
+			if(hideAppIcons) %init(hideAppIconsGroup);
+			if(enableCustomDockRadius)
+			{
+				dockCornerRadius = [pref integerForKey: @"dockCornerRadius"];
+				%init(customDockRadiusGroup);
+			} 
+			if(hideFolderTitle) %init(hideFolderTitleGroup);
+			if(folderTitleBold) %init(folderTitleBoldGroup);
+			if(enableFolderTitleCustomFontSize) 
+			{
+				folderTitleCustomFontSize = [pref integerForKey: @"folderTitleCustomFontSize"];
+				%init(folderTitleCustomFontSizeGroup);
+			}
+			if(enableCustomFolderTitleColor) 
+			{
+				customFolderTitleColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customFolderTitleColor"] withFallback: @"#FF9400"];
+				%init(customFolderTitleColorGroup);
+			}
+			if(autoCloseFolders) %init(autoCloseFoldersGroup);
+			if(pinchToCloseFolder) %init(pinchToCloseFolderGroup);
+			if(enableCustomFolderIconBackgroundColor)
+			{
+				customFolderIconBackgroundColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customFolderIconBackgroundColor"] withFallback: @"#FF9400:1.0"];
+				%init(customFolderIconBackgroundColorGroup);
+			}
+			if(enableCustomFolderCornerRadius) 
+			{
+				folderCornerRadius = [pref integerForKey: @"folderCornerRadius"];
+				%init(customFolderCornerRadiusGroup);
+			}
+			if(enableCustomFolderBackgroundColor)
+			{
+				customFolderBackgroundColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customFolderBackgroundColor"] withFallback: @"#FF9400:1.0"];
+				%init(customFolderBackgroundColorGroup);
+			}
+			// if(customCornerRadius)
+			// {
+			// 	iconCornerRadius = [pref integerForKey: @"iconCornerRadius"];
+			// 	%init(customCornerRadiusGroup);
+			// } 
+			if(hideWidgetsIn3DTouch) %init(hideWidgetsIn3DTouchGroup);
+			if(hideShareAppShortcut) %init(hideShareAppShortcutGroup);
+			if(addGetBundleIDShortcut) %init(addGetBundleIDShortcutGroup);
+			if(progressBarWhenDownloading) %init(progressBarWhenDownloadingGroup);
 
-		if(!IS_iPAD) %init(homeScreenRotationGroup);
+			if(!IS_iPAD) %init(homeScreenRotationGroup);
 
-		customHomeScreenLayoutEnabled = [pref boolForKey: @"customHomeScreenLayoutEnabled"];
-		if(customHomeScreenLayoutEnabled)
-		{
-			customHomeScreenRowsEnabled = [pref boolForKey: @"customHomeScreenRowsEnabled"];
-			customHomeScreenColumnsEnabled = [pref boolForKey: @"customHomeScreenColumnsEnabled"];
-			customFolderRowsEnabled = [pref boolForKey: @"customFolderRowsEnabled"];
-			customFolderColumnsEnabled = [pref boolForKey: @"customFolderColumnsEnabled"];
-			customDockColumnsEnabled = [pref boolForKey: @"customDockColumnsEnabled"];
+			customHomeScreenLayoutEnabled = [pref boolForKey: @"customHomeScreenLayoutEnabled"];
+			if(customHomeScreenLayoutEnabled)
+			{
+				customHomeScreenRowsEnabled = [pref boolForKey: @"customHomeScreenRowsEnabled"];
+				customHomeScreenColumnsEnabled = [pref boolForKey: @"customHomeScreenColumnsEnabled"];
+				customFolderRowsEnabled = [pref boolForKey: @"customFolderRowsEnabled"];
+				customFolderColumnsEnabled = [pref boolForKey: @"customFolderColumnsEnabled"];
+				customDockColumnsEnabled = [pref boolForKey: @"customDockColumnsEnabled"];
 
-			customHomeScreenRows = [pref unsignedIntegerForKey: @"customHomeScreenRows"];
-			customHomeScreenColumns = [pref unsignedIntegerForKey: @"customHomeScreenColumns"];
-			customFolderRows = [pref unsignedIntegerForKey: @"customFolderRows"];
-			customFolderColumns = [pref unsignedIntegerForKey: @"customFolderColumns"];
-			customDockColumns = [pref unsignedIntegerForKey: @"customDockColumns"];
+				customHomeScreenRows = [pref unsignedIntegerForKey: @"customHomeScreenRows"];
+				customHomeScreenColumns = [pref unsignedIntegerForKey: @"customHomeScreenColumns"];
+				customFolderRows = [pref unsignedIntegerForKey: @"customFolderRows"];
+				customFolderColumns = [pref unsignedIntegerForKey: @"customFolderColumns"];
+				customDockColumns = [pref unsignedIntegerForKey: @"customDockColumns"];
 
-			%init(customHomeScreenLayoutGroup);
+				%init(customHomeScreenLayoutGroup);
+			}
 		}
 	}
 }

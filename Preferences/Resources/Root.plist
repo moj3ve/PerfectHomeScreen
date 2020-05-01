@@ -15,6 +15,22 @@
 		<dict>
         	<key>cell</key>
 			<string>PSGroupCell</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>enabled</string>
+			<key>label</key>
+			<string>Enabled</string>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Home Screen Rotation - iPhone Only</string>
         </dict>
@@ -44,23 +60,19 @@
 			<key>defaults</key>
 			<string>com.johnzaro.perfecthomescreen13prefs</string>
 			<key>key</key>
-			<string>hideAppLabels</string>
+			<string>hideAppIcons</string>
 			<key>label</key>
-			<string>Hide Icon Label</string>
+			<string>Hide Selected Icons</string>
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.johnzaro.perfecthomescreen13prefs</string>
-			<key>key</key>
-			<string>hideBlueDot</string>
+			<string>PSButtonCell</string>
 			<key>label</key>
-			<string>Hide 'Updated App' Blue Dot</string>
-		</dict>
-		<dict>
+			<string>Select Apps To Hide</string>
+			<key>action</key>
+			<string>selectAppsToHide</string>
+   	 	</dict>
+		<!-- <dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
@@ -89,6 +101,36 @@
 			<real>30</real>
 			<key>min</key>
 			<real>0</real>
+		</dict> -->
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>APP LABELS</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>hideAppLabels</string>
+			<key>label</key>
+			<string>Hide Icon Label</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>hideBlueDot</string>
+			<key>label</key>
+			<string>Hide 'Updated App' Blue Dot</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -133,7 +175,7 @@
 			<key>key</key>
 			<string>customTextColorEnable</string>
 			<key>label</key>
-			<string>Custom Text Color</string>
+			<string>Enable Custom Text Color</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -152,17 +194,15 @@
 				<false/>
 			</dict>
 			<key>label</key>
-			<string>Custom Progress Color</string>
+			<string>Custom Text Color</string>
 			<key>key</key>
-			<string>Text Color</string>
+			<string>customTextColor</string>
 		</dict>
 		<dict>
         	<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>CUSTOM PROGRESS BAR</string>
-			<key>footerText</key>
-			<string>Custom Progress Bar Will Be Shown While An App Is Being Downloaded</string>
+			<string>CUSTOM APP DOWNLOAD PROGRESS BAR</string>
         </dict>
 		<dict>
 			<key>cell</key>
@@ -213,32 +253,6 @@
         	<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>HIDE APP ICONS</string>
-        </dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.johnzaro.perfecthomescreen13prefs</string>
-			<key>key</key>
-			<string>hideAppIcons</string>
-			<key>label</key>
-			<string>Enabled</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>label</key>
-			<string>Select Apps To Hide</string>
-			<key>action</key>
-			<string>selectAppsToHide</string>
-   	 	</dict>
-			<dict>
-        	<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
 			<string>DOCK</string>
         </dict>
 		<dict>
@@ -254,28 +268,32 @@
 			<string>Custom Dock Radius</string>
 		</dict>
 		<dict>
-			<key>cellClass</key>
-			<string>HBStepperTableCell</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
 			<key>default</key>
-			<real>30</real>
+			<integer>30</integer>
 			<key>defaults</key>
 			<string>com.johnzaro.perfecthomescreen13prefs</string>
 			<key>key</key>
 			<string>dockCornerRadius</string>
-			<key>label</key>
-			<string>%i Pixels</string>
-			<key>singularLabel</key>
-			<string>1 Pixel</string>
-			<key>max</key>
-			<real>60</real>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>60</integer>
 			<key>min</key>
-			<real>0</real>
+			<integer>0</integer>
+			<key>max</key>
+			<integer>60</integer>
+			<key>showValue</key>
+			<true/>
 		</dict>
 		<dict>
         	<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>FOLDERS</string>
+			<string>FOLDERS - BEHAVIOR</string>
+			<key>footerText</key>
+			<string>'CLOSE FOLDER AUTOMATICALLY' OPTION, CLOSES A FOLDER IF AN APP IS LAUNCHED</string>
         </dict>
 		<dict>
 			<key>cell</key>
@@ -287,13 +305,25 @@
 			<key>key</key>
 			<string>autoCloseFolders</string>
 			<key>label</key>
-			<string>Close Folder After Opening An App</string>
+			<string>Close Folder Automatically</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>pinchToCloseFolder</string>
+			<key>label</key>
+			<string>Pinch To Close Folder</string>
 		</dict>
 		<dict>
         	<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>SHORTCUTS - MENU WHEN 3D TOUCHING AN APP</string>
+			<string>FOLDERS - TITLE</string>
         </dict>
 		<dict>
 			<key>cell</key>
@@ -303,10 +333,203 @@
 			<key>defaults</key>
 			<string>com.johnzaro.perfecthomescreen13prefs</string>
 			<key>key</key>
-			<string>hideShareAppShortcut</string>
+			<string>hideFolderTitle</string>
 			<key>label</key>
-			<string>Hide 'Share App'</string>
+			<string>Hide Folder Title</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>folderTitleBold</string>
+			<key>label</key>
+			<string>Bold Folder Title</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>enableFolderTitleCustomFontSize</string>
+			<key>label</key>
+			<string>Custom Title Font Size</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<integer>36</integer>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>folderTitleCustomFontSize</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>70</integer>
+			<key>min</key>
+			<integer>10</integer>
+			<key>max</key>
+			<integer>80</integer>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>enableCustomFolderTitleColor</string>
+			<key>label</key>
+			<string>Custom Folder Title Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>SparkColourPickerCell</string>
+			<key>libsparkcolourpicker</key>
+			<dict>
+				<key>defaults</key>
+				<string>com.johnzaro.perfecthomescreen13prefs.colors</string>
+				<key>key</key>
+				<string>customFolderTitleColor</string>
+				<key>fallback</key>
+				<string>#FF9400</string>
+				<key>alpha</key>
+				<false/>
+			</dict>
+			<key>label</key>
+			<string>Custom Folder Title Color</string>
+			<key>key</key>
+			<string>customFolderTitleColor</string>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>FOLDERS - ICON</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>enableCustomFolderIconBackgroundColor</string>
+			<key>label</key>
+			<string>Custom Folder Icon BG Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>SparkColourPickerCell</string>
+			<key>libsparkcolourpicker</key>
+			<dict>
+				<key>defaults</key>
+				<string>com.johnzaro.perfecthomescreen13prefs.colors</string>
+				<key>key</key>
+				<string>customFolderIconBackgroundColor</string>
+				<key>fallback</key>
+				<string>#FF9400:1.0</string>
+				<key>alpha</key>
+				<true/>
+			</dict>
+			<key>label</key>
+			<string>Folder Icon BG Color</string>
+			<key>key</key>
+			<string>customFolderIconBackgroundColor</string>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>FOLDERS - MAIN VIEW</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>enableCustomFolderCornerRadius</string>
+			<key>label</key>
+			<string>Custom Folder Corner Radius</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<integer>38</integer>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>folderCornerRadius</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>140</integer>
+			<key>min</key>
+			<integer>0</integer>
+			<key>max</key>
+			<integer>140</integer>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>enableCustomFolderBackgroundColor</string>
+			<key>label</key>
+			<string>Custom Folder BG Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>SparkColourPickerCell</string>
+			<key>libsparkcolourpicker</key>
+			<dict>
+				<key>defaults</key>
+				<string>com.johnzaro.perfecthomescreen13prefs.colors</string>
+				<key>key</key>
+				<string>customFolderBackgroundColor</string>
+				<key>fallback</key>
+				<string>#FF9400:1.0</string>
+				<key>alpha</key>
+				<true/>
+			</dict>
+			<key>label</key>
+			<string>Folder BG Color</string>
+			<key>key</key>
+			<string>customFolderBackgroundColor</string>
+		</dict>
+		<dict>
+        	<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>SHORTCUTS MENU (SHOWN WHEN 3D TOUCHING AN APP)</string>
+        </dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
@@ -317,13 +540,39 @@
 			<key>key</key>
 			<string>hideWidgetsIn3DTouch</string>
 			<key>label</key>
-			<string>Hide Widgets</string>
+			<string>Hide Widget If Available</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>hideShareAppShortcut</string>
+			<key>label</key>
+			<string>Hide 'Share App' Shortcut</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.johnzaro.perfecthomescreen13prefs</string>
+			<key>key</key>
+			<string>addGetBundleIDShortcut</string>
+			<key>label</key>
+			<string>Show App Bundle ID</string>
 		</dict>
 		<dict>
         	<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Custom Home Screen Layout</string>
+			<string>--- Custom Home Screen Layout ---</string>
+			<key>alignment</key>
+			<integer>1</integer>
         </dict>
 		<dict>
 			<key>cell</key>
@@ -354,22 +603,24 @@
 			<string>Custom Home Screen Rows</string>
 		</dict>
 		<dict>
-			<key>cellClass</key>
-			<string>HBStepperTableCell</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
 			<key>default</key>
-			<real>6</real>
+			<integer>6</integer>
 			<key>defaults</key>
 			<string>com.johnzaro.perfecthomescreen13prefs</string>
 			<key>key</key>
 			<string>customHomeScreenRows</string>
-			<key>label</key>
-			<string>%i Rows</string>
-			<key>singularLabel</key>
-			<string>1 Row</string>
-			<key>max</key>
-			<real>9</real>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>6</integer>
 			<key>min</key>
-			<real>3</real>
+			<integer>3</integer>
+			<key>max</key>
+			<integer>9</integer>
+			<key>showValue</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -384,22 +635,24 @@
 			<string>Custom Home Screen Columns</string>
 		</dict>
 		<dict>
-			<key>cellClass</key>
-			<string>HBStepperTableCell</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
 			<key>default</key>
-			<real>4</real>
+			<integer>4</integer>
 			<key>defaults</key>
 			<string>com.johnzaro.perfecthomescreen13prefs</string>
 			<key>key</key>
 			<string>customHomeScreenColumns</string>
-			<key>label</key>
-			<string>%i Columns</string>
-			<key>singularLabel</key>
-			<string>1 Column</string>
-			<key>max</key>
-			<real>6</real>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>3</integer>
 			<key>min</key>
-			<real>3</real>
+			<integer>3</integer>
+			<key>max</key>
+			<integer>6</integer>
+			<key>showValue</key>
+			<true/>
 		</dict>
 		<dict>
         	<key>cell</key>
@@ -418,22 +671,24 @@
 			<string>Custom Folder Rows</string>
 		</dict>
 		<dict>
-			<key>cellClass</key>
-			<string>HBStepperTableCell</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
 			<key>default</key>
-			<real>3</real>
+			<integer>3</integer>
 			<key>defaults</key>
 			<string>com.johnzaro.perfecthomescreen13prefs</string>
 			<key>key</key>
 			<string>customFolderRows</string>
-			<key>label</key>
-			<string>%i Rows</string>
-			<key>singularLabel</key>
-			<string>1 Row</string>
-			<key>max</key>
-			<real>5</real>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>3</integer>
 			<key>min</key>
-			<real>2</real>
+			<integer>2</integer>
+			<key>max</key>
+			<integer>5</integer>
+			<key>showValue</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -448,22 +703,24 @@
 			<string>Custom Folder Columns</string>
 		</dict>
 		<dict>
-			<key>cellClass</key>
-			<string>HBStepperTableCell</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
 			<key>default</key>
-			<real>3</real>
+			<integer>3</integer>
 			<key>defaults</key>
 			<string>com.johnzaro.perfecthomescreen13prefs</string>
 			<key>key</key>
 			<string>customFolderColumns</string>
-			<key>label</key>
-			<string>%i Columns</string>
-			<key>singularLabel</key>
-			<string>1 Column</string>
-			<key>max</key>
-			<real>5</real>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>3</integer>
 			<key>min</key>
-			<real>2</real>
+			<integer>2</integer>
+			<key>max</key>
+			<integer>5</integer>
+			<key>showValue</key>
+			<true/>
 		</dict>
 		<dict>
         	<key>cell</key>
@@ -482,22 +739,24 @@
 			<string>Custom Dock Icons (iPhone)</string>
 		</dict>
 		<dict>
-			<key>cellClass</key>
-			<string>HBStepperTableCell</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
 			<key>default</key>
-			<real>4</real>
+			<integer>4</integer>
 			<key>defaults</key>
 			<string>com.johnzaro.perfecthomescreen13prefs</string>
 			<key>key</key>
 			<string>customDockColumns</string>
-			<key>label</key>
-			<string>%i Icons</string>
-			<key>singularLabel</key>
-			<string>1 Icon</string>
-			<key>max</key>
-			<real>6</real>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>2</integer>
 			<key>min</key>
-			<real>4</real>
+			<integer>4</integer>
+			<key>max</key>
+			<integer>6</integer>
+			<key>showValue</key>
+			<true/>
 		</dict>
 		<dict>
         	<key>cell</key>
