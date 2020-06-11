@@ -60,3 +60,6 @@
 
 @interface SBFolderTitleTextField : UITextField
 @end
+
+@interface SBIconListPageControl : UIView
+@end

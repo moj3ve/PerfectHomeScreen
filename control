@@ -1,7 +1,7 @@
 Package: com.johnzaro.perfecthomescreen13
 Name: PerfectHomeScreen13
 Depends: mobilesubstrate, com.spark.libsparkcolourpicker, preferenceloader, ws.hbang.common (>= 1.14), com.spark.libsparkapplist, firmware (>= 13)
-Version: 1.7
+Version: 1.8
 Architecture: iphoneos-arm
 Description: Hide Icons, App Labels, Auto Close Folders, Custom Icon Layout And More
 Maintainer: Johnzaro <johnzrgnns@gmail.com>

@@ -1,5 +1,4 @@
 #import "PerfectHomeScreen13.h"
-
 #import <Cephei/HBPreferences.h>
 #import "SparkAppList.h"
 #import "SparkColourPickerUtils.h"
@@ -32,6 +31,7 @@ static NSUInteger iconCornerRadius;
 static BOOL hideAppIcons;
 static BOOL hideAppLabels;
 static BOOL hideBlueDot;
+static BOOL hidePageDots;
 static BOOL customBgTextColorEnable;
 static BOOL customTextColorEnable;
 static UIColor *customBgTextColor;
@@ -744,9 +744,21 @@ static NSUInteger customDockColumns;
 
 %end
 
+%group hidePageDotsGroup
+
+	%hook SBIconListPageControl
+
+	- (void)layoutSubviews
+	{
+		[self setHidden: YES];
+	}
+
+	%end
+
+%end
+
 %ctor
 {
-	%init;
 	@autoreleasepool
 	{
 		pref = [[HBPreferences alloc] initWithIdentifier: @"com.johnzaro.perfecthomescreen13prefs"];
@@ -817,6 +829,7 @@ static NSUInteger customDockColumns;
 			hideShareAppShortcut = [pref boolForKey: @"hideShareAppShortcut"];
 			addGetBundleIDShortcut = [pref boolForKey: @"addGetBundleIDShortcut"];
 			enableHomeScreenRotation = [pref boolForKey: @"enableHomeScreenRotation"];
+			hidePageDots = [pref boolForKey: @"hidePageDots"];
 
 			NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.johnzaro.perfecthomescreen13prefs.colors.plist"];
 			
@@ -829,18 +842,25 @@ static NSUInteger customDockColumns;
 					customProgressBarColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customProgressBarColor"] withFallback: @"#FF9400"];
 			}
 
-			if(hideAppLabels) %init(hideAppLabelsGroup);
-			if(hideBlueDot) %init(hideBlueDotGroup);
-			if(customBgTextColorEnable) %init(customBgTextColorGroup);
-			if(customTextColorEnable) %init(customTextColorGroup);
-			if(hideAppIcons) %init(hideAppIconsGroup);
+			if(hideAppLabels)
+				%init(hideAppLabelsGroup);
+			if(hideBlueDot)
+				%init(hideBlueDotGroup);
+			if(customBgTextColorEnable)
+				%init(customBgTextColorGroup);
+			if(customTextColorEnable)
+				%init(customTextColorGroup);
+			if(hideAppIcons)
+				%init(hideAppIconsGroup);
 			if(enableCustomDockRadius)
 			{
 				dockCornerRadius = [pref integerForKey: @"dockCornerRadius"];
 				%init(customDockRadiusGroup);
 			} 
-			if(hideFolderTitle) %init(hideFolderTitleGroup);
-			if(folderTitleBold) %init(folderTitleBoldGroup);
+			if(hideFolderTitle)
+				%init(hideFolderTitleGroup);
+			if(folderTitleBold)
+				%init(folderTitleBoldGroup);
 			if(enableFolderTitleCustomFontSize) 
 			{
 				folderTitleCustomFontSize = [pref integerForKey: @"folderTitleCustomFontSize"];
@@ -851,8 +871,10 @@ static NSUInteger customDockColumns;
 				customFolderTitleColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customFolderTitleColor"] withFallback: @"#FF9400"];
 				%init(customFolderTitleColorGroup);
 			}
-			if(autoCloseFolders) %init(autoCloseFoldersGroup);
-			if(pinchToCloseFolder) %init(pinchToCloseFolderGroup);
+			if(autoCloseFolders)
+				%init(autoCloseFoldersGroup);
+			if(pinchToCloseFolder)
+				%init(pinchToCloseFolderGroup);
 			if(enableCustomFolderIconBackgroundColor)
 			{
 				customFolderIconBackgroundColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customFolderIconBackgroundColor"] withFallback: @"#FF9400:1.0"];
@@ -873,12 +895,19 @@ static NSUInteger customDockColumns;
 			// 	iconCornerRadius = [pref integerForKey: @"iconCornerRadius"];
 			// 	%init(customCornerRadiusGroup);
 			// } 
-			if(hideWidgetsIn3DTouch) %init(hideWidgetsIn3DTouchGroup);
-			if(hideShareAppShortcut) %init(hideShareAppShortcutGroup);
-			if(addGetBundleIDShortcut) %init(addGetBundleIDShortcutGroup);
-			if(progressBarWhenDownloading) %init(progressBarWhenDownloadingGroup);
+			if(hideWidgetsIn3DTouch)
+				%init(hideWidgetsIn3DTouchGroup);
+			if(hideShareAppShortcut)
+				%init(hideShareAppShortcutGroup);
+			if(addGetBundleIDShortcut)
+				%init(addGetBundleIDShortcutGroup);
+			if(progressBarWhenDownloading)
+				%init(progressBarWhenDownloadingGroup);
+			if(hidePageDots)
+				%init(hidePageDotsGroup);
 
-			if(!IS_iPAD) %init(homeScreenRotationGroup);
+			if(!IS_iPAD)
+				%init(homeScreenRotationGroup);
 
 			customHomeScreenLayoutEnabled = [pref boolForKey: @"customHomeScreenLayoutEnabled"];
 			if(customHomeScreenLayoutEnabled)
