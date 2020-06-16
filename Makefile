@@ -7,11 +7,11 @@ GO_EASY_ON_ME = 1
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = PerfectHomeScreen13
-PerfectHomeScreen13_FILES = PerfectHomeScreen13.xm
-PerfectHomeScreen13_CFLAGS = -fobjc-arc -Wno-logical-op-parentheses -Wno-nullability-completeness
-PerfectHomeScreen13_LIBRARIES += sparkapplist sparkcolourpicker
-PerfectHomeScreen13_EXTRA_FRAMEWORKS += Cephei
+TWEAK_NAME = PerfectHomeScreen
+PerfectHomeScreen_FILES = PerfectHomeScreen.xm
+PerfectHomeScreen_CFLAGS = -fobjc-arc -Wno-logical-op-parentheses -Wno-nullability-completeness
+PerfectHomeScreen_LIBRARIES += sparkapplist sparkcolourpicker
+PerfectHomeScreen_EXTRA_FRAMEWORKS += Cephei
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

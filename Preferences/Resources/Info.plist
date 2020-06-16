@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>PerfectHomeScreen13Prefs</string>
+	<string>PerfectHomeScreenPrefs</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.johnzaro.perfecthomescreen13prefs</string>
 	<key>CFBundleInfoDictionaryVersion</key>
