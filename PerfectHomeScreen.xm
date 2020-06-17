@@ -7,6 +7,7 @@
 
 static HBPreferences *pref;
 static BOOL enabled;
+static BOOL disableParallaxEffect;
 static BOOL progressBarWhenDownloading;
 static BOOL enableCustomProgressBarColor;
 static UIColor *customProgressBarColor;
@@ -274,7 +275,7 @@ static NSUInteger customDockColumns;
 
 	%hook SBFolderBackgroundView
 
-	-(void)layoutSubviews
+	- (void)layoutSubviews
 	{
 		%orig;
 		
@@ -353,7 +354,7 @@ static NSUInteger customDockColumns;
 
 // 	%hook SBIconImageView
 
-// 	-(id)initWithFrame:(CGRect)arg1
+// 	- (id)initWithFrame:(CGRect)arg1
 // 	{
 // 		self = %orig;
 
@@ -474,12 +475,12 @@ static NSUInteger customDockColumns;
 
 	%hook SpringBoard
 
-	-(BOOL)_statusBarOrientationFollowsWindow:(id)arg1
+	- (BOOL)_statusBarOrientationFollowsWindow:(id)arg1
 	{
 		return NO;
 	}
 	
-	-(long long)homeScreenRotationStyle
+	- (long long)homeScreenRotationStyle
 	{
 		if(enableHomeScreenRotation) return 2;
 		else return 0;
@@ -528,28 +529,32 @@ static NSUInteger customDockColumns;
 	%new
 	- (NSString*)findLocation
 	{
-		if(self.location) return self.location;
+		if([self location])
+			return [self location];
 		else
 		{
 			NSUInteger rows = MSHookIvar<NSUInteger>(self, "_numberOfPortraitRows");
 			NSUInteger columns = MSHookIvar<NSUInteger>(self, "_numberOfPortraitColumns");
 			
-			if(rows == 1) self.location = @"Dock";
-			else if(rows == 3 && columns == 3 || rows == 4 && columns == 4) self.location = @"Folder";
-			else self.location = @"Home";
+			if(rows == 1)
+				[self setLocation: @"Dock"];
+			else if(rows == 3 && columns == 3 || rows == 4 && columns == 4)
+				[self setLocation: @"Folder"];
+			else
+				[self setLocation: @"Home"];
 		}
-		return self.location;
+		return [self location];
 	}
 
 	- (NSUInteger)numberOfPortraitRows
 	{
 		[self findLocation];
 		
-		if([self.location isEqualToString: @"Dock"] && customDockColumnsEnabled && !IS_iPAD)
+		if([[self location] isEqualToString: @"Dock"])
 			return 1;
-		else if([self.location isEqualToString: @"Folder"] && customFolderRowsEnabled)
+		else if([[self location] isEqualToString: @"Folder"] && customFolderRowsEnabled)
 			return customFolderRows;
-		else if([self.location isEqualToString: @"Home"] && customHomeScreenRowsEnabled)
+		else if([[self location] isEqualToString: @"Home"] && customHomeScreenRowsEnabled)
 			return customHomeScreenRows;
 
 		return %orig;
@@ -559,14 +564,22 @@ static NSUInteger customDockColumns;
 	{
 		[self findLocation];
 		
-		if([self.location isEqualToString: @"Dock"] && customDockColumnsEnabled && !IS_iPAD)
+		if([[self location] isEqualToString: @"Dock"] && customDockColumnsEnabled && !IS_iPAD)
 			return customDockColumns;
-		else if([self.location isEqualToString: @"Folder"] && customFolderRowsEnabled)
+		else if([[self location] isEqualToString: @"Folder"] && customFolderRowsEnabled)
 			return customFolderRows;
-		else if([self.location isEqualToString: @"Home"] && customHomeScreenRowsEnabled)
+		else if([[self location] isEqualToString: @"Home"])
 		{
-			if(IS_iPAD) return customHomeScreenRows;
-			else return customHomeScreenColumns;
+			if(IS_iPAD)
+			{
+				if(customHomeScreenRowsEnabled)
+					return customHomeScreenRows;
+			}
+			else
+			{
+				if(customHomeScreenColumnsEnabled)
+					return customHomeScreenColumns;
+			}
 		}
 		
 		return %orig;
@@ -576,11 +589,11 @@ static NSUInteger customDockColumns;
 	{
 		[self findLocation];
 		
-		if([self.location isEqualToString: @"Dock"] && customDockColumnsEnabled && !IS_iPAD)
+		if([[self location] isEqualToString: @"Dock"] && customDockColumnsEnabled && !IS_iPAD)
 			return customDockColumns;
-		else if([self.location isEqualToString: @"Folder"] && customFolderColumnsEnabled)
+		else if([[self location] isEqualToString: @"Folder"] && customFolderColumnsEnabled)
 			return customFolderColumns;
-		else if([self.location isEqualToString: @"Home"] && customHomeScreenColumnsEnabled)
+		else if([[self location] isEqualToString: @"Home"] && customHomeScreenColumnsEnabled)
 			return customHomeScreenColumns;
 		
 		return %orig;
@@ -590,55 +603,70 @@ static NSUInteger customDockColumns;
 	{
 		[self findLocation];
 		
-		if([self.location isEqualToString: @"Dock"] && customDockColumnsEnabled && !IS_iPAD)
+		if([[self location] isEqualToString: @"Dock"] && customDockColumnsEnabled && !IS_iPAD)
 			return 1;
-		else if([self.location isEqualToString: @"Folder"] && customFolderColumnsEnabled)
+		else if([[self location] isEqualToString: @"Folder"] && customFolderColumnsEnabled)
 			return customFolderColumns;
-		else if([self.location isEqualToString: @"Home"] && customHomeScreenColumnsEnabled)
+		else if([[self location] isEqualToString: @"Home"])
 		{
-			if(IS_iPAD) return customHomeScreenColumns;
-			else return customHomeScreenRows;
+			if(IS_iPAD)
+			{
+				if(customHomeScreenColumnsEnabled)
+					return customHomeScreenColumns;
+			}
+			else
+			{
+				if(customHomeScreenRowsEnabled)
+					return customHomeScreenRows;
+			}
 		}
 		
 		return %orig;
 	}
 
-	-(UIEdgeInsets)portraitLayoutInsets
+	- (UIEdgeInsets)portraitLayoutInsets
 	{
-		[self findLocation];
 		UIEdgeInsets x = %orig;
 		
-		if([self.location isEqualToString: @"Folder"] && !IS_iPAD && (customFolderRowsEnabled || customFolderColumnsEnabled))
+		if(IS_iPAD)
+			return x;
+
+		[self findLocation];
+		NSUInteger rows = [self numberOfLandscapeRows];
+		NSUInteger columns = [self numberOfLandscapeColumns];
+		
+		if([[self location] isEqualToString: @"Folder"] && (customFolderRowsEnabled || customFolderColumnsEnabled))
 		{
 			int rowsOffset = 0, columnsOffset = 0;
-			if(customFolderRowsEnabled)
-			{
-				if(customFolderRows == 2) rowsOffset = 40;
-				else if(customFolderRows > 3) rowsOffset = -15;
-			}
-			if(customFolderColumnsEnabled)
-			{
-				if(customFolderColumns == 2) columnsOffset = 40;
-				else if(customFolderColumns > 3) columnsOffset = -15;
-			}
+			
+			if(rows == 2)
+				rowsOffset = 40;
+			else if(rows > 3)
+				rowsOffset = -15;
+			
+			if(columns == 2)
+				columnsOffset = 40;
+			else if(columns > 3)
+				columnsOffset = -15;
 			
 			if(rowsOffset != 0 || columnsOffset != 0)
 				return UIEdgeInsetsMake(x.top + rowsOffset, x.left + columnsOffset, x.bottom + rowsOffset, x.right + columnsOffset);
 		}
-		else if([self.location isEqualToString: @"Home"] && !IS_iPAD && (customHomeScreenRowsEnabled || customHomeScreenColumnsEnabled))
+		else if([[self location] isEqualToString: @"Home"] && (customHomeScreenRowsEnabled || customHomeScreenColumnsEnabled))
 		{
 			int rowsOffset = 0, columnsOffset = 0;
-			if(customHomeScreenRowsEnabled)
-			{
-				if(customHomeScreenRows == 3) rowsOffset = 100;
-				else if(customHomeScreenRows == 4) rowsOffset = 60;
-				else if(customHomeScreenRows > 6) rowsOffset = -20;
-			}
-			if(customHomeScreenColumnsEnabled)
-			{
-				if(customHomeScreenColumns == 3) columnsOffset = 30;
-				else if(customHomeScreenColumns > 4) columnsOffset = -15;
-			}
+			
+			if(rows == 3)
+				rowsOffset = 100;
+			else if(rows == 4)
+				rowsOffset = 60;
+			else if(rows > 6)
+				rowsOffset = -20;
+
+			if(columns == 3)
+				columnsOffset = 30;
+			else if(columns > 4)
+				columnsOffset = -15;
 			
 			if(rowsOffset != 0 || columnsOffset != 0)
 				return UIEdgeInsetsMake(x.top + rowsOffset, x.left + columnsOffset, x.bottom + rowsOffset, x.right + columnsOffset);
@@ -646,43 +674,51 @@ static NSUInteger customDockColumns;
 		return x;
 	}
 
-	-(UIEdgeInsets)landscapeLayoutInsets
+	- (UIEdgeInsets)landscapeLayoutInsets
 	{
-		[self findLocation];
 		UIEdgeInsets x = %orig;
 		
-		if([self.location isEqualToString: @"Folder"] && !IS_iPAD && (customFolderRowsEnabled || customFolderColumnsEnabled))
+		if(IS_iPAD)
+			return x;
+
+		[self findLocation];
+		NSUInteger rows = [self numberOfLandscapeRows];
+		NSUInteger columns = [self numberOfLandscapeColumns];
+		
+		if([[self location] isEqualToString: @"Folder"] && (customFolderRowsEnabled || customFolderColumnsEnabled))
 		{
 			int rowsOffset = 0, columnsOffset = 0;
-			if(customFolderRowsEnabled)
-			{
-				if(customFolderRows == 2) rowsOffset = 40;
-				else if(customFolderRows > 3) rowsOffset = -15;
-			}
-			if(customFolderColumnsEnabled)
-			{
-				if(customFolderColumns == 2) columnsOffset = 40;
-				else if(customFolderColumns > 3) columnsOffset = -15;
-			}
+			
+			if(rows == 2)
+				rowsOffset = 40;
+			else if(rows > 3)
+				rowsOffset = -15;
+
+			if(columns == 2)
+				columnsOffset = 40;
+			else if(columns > 3)
+				columnsOffset = -15;
 			
 			if(rowsOffset != 0 || columnsOffset != 0)
 				return UIEdgeInsetsMake(x.top + rowsOffset, x.left + columnsOffset, x.bottom + rowsOffset, x.right + columnsOffset);
 		}
-		else if([self.location isEqualToString: @"Home"] && !IS_iPAD && (customHomeScreenRowsEnabled || customHomeScreenColumnsEnabled))
+		else if([[self location] isEqualToString: @"Home"] && (customHomeScreenRowsEnabled || customHomeScreenColumnsEnabled))
 		{
 			int rowsOffset = 0, columnsOffset = 0;
-			if(customHomeScreenRowsEnabled)
-			{
-				if(customHomeScreenRows == 3) columnsOffset = 100;
-				else if(customHomeScreenRows == 4 || customHomeScreenRows == 5 || customHomeScreenRows == 6) columnsOffset = 70;
-				else if(customHomeScreenRows > 6) columnsOffset = 60;
-			}
-			if(customHomeScreenColumnsEnabled)
-			{
-				if(customHomeScreenColumns == 3) rowsOffset = -20;
-				else if(customHomeScreenColumns == 4) rowsOffset = -40;
-				else if(customHomeScreenColumns >= 5) rowsOffset = -60;
-			}
+			
+			if(rows == 3)
+				columnsOffset = 100;
+			else if(rows == 4 || rows == 5 || rows == 6)
+				columnsOffset = 70;
+			else if(rows > 6)
+				columnsOffset = 60;
+			
+			if(columns == 3)
+				rowsOffset = -20;
+			else if(columns == 4)
+				rowsOffset = -40;
+			else if(columns >= 5)
+				rowsOffset = -60;
 			
 			if(rowsOffset != 0 || columnsOffset != 0)
 				return UIEdgeInsetsMake(x.top + rowsOffset, x.left + columnsOffset + 20, x.bottom + rowsOffset + 20, x.right + columnsOffset - 20);
@@ -757,6 +793,121 @@ static NSUInteger customDockColumns;
 
 %end
 
+%group disableParallaxEffectGroup
+
+	%hook UIView
+
+	+ (void)_setShouldEnableUIKitParallaxEffects: (BOOL)arg1
+	{
+		%orig(NO);
+	}
+
+	%end
+
+	%hook SBFWallpaperOptions
+
+	- (BOOL)parallaxEnabled
+	{
+		return NO;
+	}
+
+	%end
+
+	%hook SBFWallpaperView
+
+	+ (BOOL)_allowsParallax
+	{
+		return NO;
+	}
+
+	+ (BOOL)_shouldScaleForParallax
+	{
+		return NO;
+	}
+
+	- (BOOL)parallaxEnabled
+	{
+		return NO;
+	}
+
+	%end
+
+	%hook SBFStaticWallpaperView
+
+	+ (BOOL)_allowsParallax
+	{
+		return NO;
+	}
+
+	%end
+
+	%hook SBFScrollableStaticWallpaperView
+
+	+ (BOOL)_shouldScaleForParallax
+	{
+		return NO;
+	}
+
+	%end
+
+	%hook SBSUIWallpaperPreviewViewController
+
+	- (BOOL)motionEnabled
+	{
+		return NO;
+	}
+
+	%end
+
+	%hook SBFParallaxSettings
+
+	- (BOOL)slideEnabled
+	{
+		return NO;
+	}
+
+	- (BOOL)tiltEnabled
+	{
+		return NO;
+	}
+
+	- (BOOL)increaseEnabled
+	{
+		return NO;
+	}
+
+	%end
+
+	%hook _UIMotionEffectEngine
+
+	- (BOOL)_isSuspended
+	{
+		return YES;
+	}
+
+	+ (BOOL)_motionEffectsSupported
+	{
+		return NO;
+	}
+
+	+ (BOOL)_motionEffectsEnabled
+	{
+		return NO;
+	}
+
+	%end
+
+	%hook _UIMotionAnalyzer
+
+	- (id)initWithSettings: (id)arg1
+	{
+		return nil;
+	}
+
+	%end
+
+%end
+
 %ctor
 {
 	@autoreleasepool
@@ -765,6 +916,7 @@ static NSUInteger customDockColumns;
 		[pref registerDefaults:
 		@{
 			@"enabled": @NO,
+			@"disableParallaxEffect": @NO,
 			@"hideAppLabels": @NO,
 			@"hideBlueDot": @NO,
 			@"customBgTextColorEnable": @NO,
@@ -806,6 +958,7 @@ static NSUInteger customDockColumns;
 		enabled = [pref boolForKey: @"enabled"];
 		if(enabled)
 		{
+			disableParallaxEffect = [pref boolForKey: @"disableParallaxEffect"];
 			hideAppLabels = [pref boolForKey: @"hideAppLabels"];
 			hideBlueDot = [pref boolForKey: @"hideBlueDot"];
 			customBgTextColorEnable = [pref boolForKey: @"customBgTextColorEnable"];
@@ -842,6 +995,8 @@ static NSUInteger customDockColumns;
 					customProgressBarColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customProgressBarColor"] withFallback: @"#FF9400"];
 			}
 
+			if(disableParallaxEffect)
+				%init(disableParallaxEffectGroup);
 			if(hideAppLabels)
 				%init(hideAppLabelsGroup);
 			if(hideBlueDot)

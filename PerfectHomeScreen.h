@@ -1,6 +1,6 @@
 @interface SBIconProgressView: UIView
-@property(nonatomic, strong) UILabel *_Nullable progressLabel;
-@property(nonatomic, strong) UIView *_Nullable progressBar;
+@property(nonatomic, strong) UILabel *progressLabel;
+@property(nonatomic, strong) UIView *progressBar;
 @property(nonatomic, assign) double displayedFraction;
 @end
 
@@ -10,22 +10,26 @@
 @end
 
 @interface SBHIconManager: NSObject
-- (SBFolderController *_Nullable)openedFolderController;
+- (SBFolderController*)openedFolderController;
 @end
 
 @interface SBApplicationIcon: NSObject
-- (NSString *_Nullable)applicationBundleID;
+- (NSString*)applicationBundleID;
 @end
 
 @interface SBIconListGridLayoutConfiguration
-@property(nonatomic, assign) NSString *_Nullable location;
-- (NSString *_Nullable)findLocation;
+- (NSUInteger)numberOfPortraitRows;
+- (NSUInteger)numberOfLandscapeRows;
+- (NSUInteger)numberOfPortraitColumns;
+- (NSUInteger)numberOfLandscapeColumns;
+@property(nonatomic, assign) NSString *location;
+- (NSString*)findLocation;
 @end
 
-@interface SBHIconViewContextMenuWrapperViewController : UIViewController
+@interface SBHIconViewContextMenuWrapperViewController: UIViewController
 @end
 
-@interface _UICutoutShadowView : UIView
+@interface _UICutoutShadowView: UIView
 @end
 
 @interface SBIconImageView: UIImageView
@@ -40,14 +44,14 @@
 @end
 
 @interface SBSApplicationShortcutItem: NSObject
-- (void)setLocalizedTitle:(NSString *)arg1;
-- (NSString *)localizedTitle;
-- (void)setLocalizedSubtitle:(NSString *)arg1;
-- (void)setBundleIdentifierToLaunch:(NSString *)arg1;
+- (void)setLocalizedTitle:(NSString*)arg1;
+- (NSString*)localizedTitle;
+- (void)setLocalizedSubtitle:(NSString*)arg1;
+- (void)setBundleIdentifierToLaunch:(NSString*)arg1;
 @property(nonatomic, retain) NSString *type;
 @end
 
-@interface SBWallpaperEffectView : UIView
+@interface SBWallpaperEffectView: UIView
 @property(nonatomic, strong) UIView *blurView;
 @end
 
@@ -55,11 +59,11 @@
 - (SBWallpaperEffectView*)backgroundView;
 @end
 
-@interface SBFolderBackgroundView : UIView
+@interface SBFolderBackgroundView: UIView
 @end
 
-@interface SBFolderTitleTextField : UITextField
+@interface SBFolderTitleTextField: UITextField
 @end
 
-@interface SBIconListPageControl : UIView
+@interface SBIconListPageControl: UIView
 @end
